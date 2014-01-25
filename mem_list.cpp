@@ -17,7 +17,7 @@ MemList::~MemList(){
 
 }
 
-void MemList::Push(QUEUEITEM *item) 
+void MemList::Push(QueueItem *item) 
 {
 	
 }

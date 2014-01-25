@@ -1,3 +1,4 @@
+#include "format.h"
 
 class QueueItem {
 	uint32_t length_;
@@ -10,17 +11,17 @@ public:
 };
 
 typedef struct queueLink {
-		
-	QUEUEITEM *next;
-}QUEUELINK;
+	QueueItem *data;
+	struct queueLink *next;
+} QUEUELINK;
 
 class MemList
 {
-	static memList *instance_;
+	static MemList *instance_;
 public:
 	static MemList *Instance();
 	MemList();	
 	~MemList();
-	void Push(QUEUEITEM *item);	
-	QUEUEITEM *Pop();	
+	void Push(QueueItem *item);	
+	QueueItem *Pop();	
 };

@@ -1,7 +1,7 @@
 CC:=g++
 CXX:=g++
 DEBUG=DEBUG
-OUTPUTNAME:=queue
+OUTPUTNAME:=bqueue
 OUTPATH=output
 INCLUDES += -I/usr/include/
 
