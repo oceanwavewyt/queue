@@ -29,13 +29,11 @@ FixFile::~FixFile(){
 }                                              
 
 int FixFile::GetCurrentFile(std::string &filename) {
-  char buf[50]={0};
   if(!curFileid) {
       curFileid = startid_;
       AddItem(curFileid);
   }
-  sprintf(buf,"./data/queue_%04d.dat", curFileid);
-  filename = buf;
+  QueueFileName::List(curFileid, filename);
   return 0;
 }
 
@@ -59,7 +57,7 @@ void FixFile::AddItem(FileId id) {
   } 
 }
 
-void FixFile::GetUnUse(std::map<TimeId, FileId> &unuseFiles) {
+void FixFile::GetUnUse(FILELIST &unuseFiles) {
     fileList *curfile=0;
     for(int i=0; i<=fNum; i++){
         uint32_t size = i*sizeof(fileList);

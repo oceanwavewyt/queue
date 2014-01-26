@@ -94,9 +94,9 @@ int main(int argc, char *args[])
 	cout << "current file: " << filename << endl;
 	
 	/*********************/
-	TestWrite(f, filename);	
+	//TestWrite(f, filename);	
 	
-	//TestRead(f, filename);	
+	TestRead(f, filename);	
 	
 	return 1;
 }

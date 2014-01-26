@@ -60,5 +60,20 @@ static const uint32_t fMaxBlockNum = 100;
 
 typedef uint8_t FileId;
 typedef uint32_t ItemNumber;
-typedef uint64_t TimeId; 
+typedef uint64_t TimeId;
+
+typedef std::map<TimeId, FileId> FILELIST; 
+
+class QueueFileName
+{
+public:
+	static void List(FileId id, std::string &filename) {
+		char buf[50] = {0};
+		sprintf(buf,"./data/queue_%04d.lst", id);
+		filename = buf;
+	}  	
+
+};
+
+
 #endif

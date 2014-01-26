@@ -59,7 +59,7 @@ public:
   int GetCurrentFile(std::string &filename);
   bool LoadFile();
   //按照时间顺序读取未使用过的文件列表
-  void GetUnUse(std::map<TimeId, FileId> &unuseFiles);
+  void GetUnUse(FILELIST &unuseFiles);
   void SetItemNumber(ItemNumber id);
   void AddItem(FileId id);
 private:
