@@ -1,4 +1,6 @@
 #include "mem_list.h"
+#include "file_env.h"
+#include "reader.h"
 
 MemList *MemList::instance_ = NULL;
 
@@ -53,17 +55,44 @@ uint64_t MemList::Load(FILELIST &flist)
 	FILELIST::iterator it;
 	uint64_t num = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
+		cout << it->first << "\t"<< (FileId)it->second <<endl;
 		num += LoadFile(it->second);	
 	}
 	return num;	
 }
 
-uint64_t MemList::LoadFile(FileId id) 
+uint64_t MemList::LoadFile(FileId fid) 
 {
 	string filename;
-	QueueFileName::List(id, filename);
-	
-	return 1;
+	QueueFileName::List(fid, filename);
+	Files f;
+	SequentialFile* file;
+  	f.NewSequentialFile(filename, &file);
+	Reader reader(file,false,0);
+	string record;
+	string scratch;
+	uint64_t num=0;
+	uint32_t id;
+	while((id = reader.ReadRecord(record, scratch))!=0){
+		//cout <<"id: "<< id << endl;
+		if(!id) continue;
+		cout << "fid: "<< fid << endl;
+		QueueItem *it = new QueueItem(record, id, fid);
+		Push(it);
+		num++;
+	}	
+	delete file;	
+	return num;
+}
+
+void MemList::ReadTest()
+{
+	QueueLink *qk;
+	qk = head_;	
+	while(qk) {
+		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid() <<endl;
+		qk = qk->next;
+	}
 }
 
 uint64_t MemList::Size() 

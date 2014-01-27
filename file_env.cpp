@@ -67,10 +67,9 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
         if(file->status == fUsing) {
 		  assert(curfile==0);
           curfile = file;
-          continue;
         }
         //insert 
-        unuseFiles[file->seq] = file->id;
+        unuseFiles[file->seq] = static_cast<FileId>(file->id);
     }
     if(curfile) {
         curFileid = curfile->id;

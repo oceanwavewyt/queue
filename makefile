@@ -3,7 +3,7 @@ CXX:=g++
 DEBUG=DEBUG
 OUTPUTNAME:=bqueue
 OUTPATH=output
-INCLUDES += -I/usr/include/
+INCLUDES += -I/usr/include/ -I./include/
 
 LDFLAGS += -lpthread
 CPPFLAGS += -g -fPIC -pg -Wall

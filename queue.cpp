@@ -2,6 +2,7 @@
 #include "file_env.h"
 #include "reader.h"
 #include "writer.h"
+#include "mem_list.h"
 
 #include <iostream>
 #include <fstream>
@@ -89,14 +90,19 @@ int main(int argc, char *args[])
 	//load to memory
 	std::map<TimeId, FileId> fileMapList;
 	fFile->GetUnUse(fileMapList);	
+	MemList::Instance()->Load(fileMapList);
+	
+	MemList::Instance()->ReadTest();	
+
 	string filename;
 	fFile->GetCurrentFile(filename);
 	cout << "current file: " << filename << endl;
+
 	
 	/*********************/
 	//TestWrite(f, filename);	
 	
-	TestRead(f, filename);	
+	//TestRead(f, filename);	
 	
 	return 1;
 }

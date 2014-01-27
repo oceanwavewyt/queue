@@ -58,7 +58,7 @@ enum FileStatus {
 static const int fNum = 100;
 static const uint32_t fMaxBlockNum = 100;
 
-typedef uint8_t FileId;
+typedef uint16_t FileId;
 typedef uint32_t ItemNumber;
 typedef uint64_t TimeId;
 
