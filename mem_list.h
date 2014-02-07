@@ -1,5 +1,8 @@
+#ifndef MEM_LIST_H_
+#define MEM_LIST_H_
 #include "format.h"
 
+class Writer;
 class QueueItem {
 	uint32_t length_;
 	uint32_t id_;
@@ -20,6 +23,9 @@ public:
 	}
 	FileId Fileid() {
 		return fid_;
+	}
+	void Str() {
+		cout << str_ << endl;
 	}
 	~QueueItem() {
 		if(str_) free(str_);
@@ -47,17 +53,22 @@ public:
 	static MemList *Instance();
 	MemList();	
 	~MemList();
-	uint64_t Load(FILELIST &list);
+	uint64_t Load(FILELIST &list, FileId curFileid);
 	void Push(QueueItem *item);	
 	QueueItem *Pop();
 	void Delete();
 	uint64_t Size();
 	
+	void SetWriter(string &filename); 
+	void WriteRecord(const string &str, size_t length);
+
 	void ReadTest(); 
 private:
-	uint64_t LoadFile(FileId id);
+	uint64_t LoadFile(FileId id,FileId curFileid);
 private:
 	QueueLink *head_;
 	QueueLink *tail_;
-	uint64_t length_;	
+	uint64_t length_;
+	Writer *writer_;	
 };
+#endif

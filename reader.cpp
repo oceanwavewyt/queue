@@ -48,7 +48,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
       return 0;
     }
   }
-
+  cout << "last_record_offset_: " <<last_record_offset_ << endl;
   scratch.clear();
   record.clear();
   bool in_fragmented_record = false;

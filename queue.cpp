@@ -25,24 +25,25 @@ size_t readtest(string &filename, string &r) {
 	 return size;
 }
 
-void TestWrite(Files &f, string &filename) {
-
+void TestWrite() {
+	/*
 	MmapFile *mfile;
 
 	f.NewWritableFile(filename, &mfile);	
 	Writer* w = new Writer(mfile);
-
+	*/
 	string testData;
-	testData = "我是ddfdf你大爷";
-	w->AddRecord(testData, testData.size());
+	testData = "我是ddfdf你大爷qqqqq";
+	MemList::Instance()->WriteRecord(testData, testData.size());
 
 	char testData2[10] = "123456789";	
-	w->AddRecord(testData2, 10);
-	
+	MemList::Instance()->WriteRecord(testData2, 10);
+	/*
 	string dataFilename = "/root/wm_8d580aa8adddaa3776a8cd1516d832ab.jpg";
 	string imgdata;
 	size_t len = readtest(dataFilename, imgdata);
 	w->AddRecord(imgdata, len);
+	*/
 	/*
 	ofstream out2("../tmp/444.jpg",ios::binary);
 		out2<<imgdata;
@@ -67,7 +68,7 @@ void TestRead(Files &f, string &filename) {
 		//out<<record;
 		//out.close();
 		//}else{
-			//cout << "read: " << record << endl;
+			cout << "read: " << record << endl;
 		//}
 		cout <<"id: "<< id << endl;
 		i++;
@@ -89,20 +90,27 @@ int main(int argc, char *args[])
 	}
 	//load to memory
 	std::map<TimeId, FileId> fileMapList;
-	fFile->GetUnUse(fileMapList);	
-	MemList::Instance()->Load(fileMapList);
-	
-	MemList::Instance()->ReadTest();	
+	fFile->GetUnUse(fileMapList);
 
 	string filename;
 	fFile->GetCurrentFile(filename);
 	cout << "current file: " << filename << endl;
 
+	MemList::Instance()->SetWriter(filename);
+
+	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
+	
+	MemList::Instance()->ReadTest();	
+
+	
+
 	
 	/*********************/
-	//TestWrite(f, filename);	
+	TestWrite();	
 	
 	//TestRead(f, filename);	
+	//MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
+	//MemList::Instance()->ReadTest();	
 	return 1;
 }

@@ -37,6 +37,14 @@ int FixFile::GetCurrentFile(std::string &filename) {
   return 0;
 }
 
+FileId FixFile::GetCurrentFileId() {
+  if(!curFileid) {
+      curFileid = startid_;
+      AddItem(curFileid);
+  }
+  return curFileid;
+}
+
 void FixFile::SetItemNumber(ItemNumber id) {
 		
 
@@ -59,13 +67,15 @@ void FixFile::AddItem(FileId id) {
 
 void FixFile::GetUnUse(FILELIST &unuseFiles) {
     fileList *curfile=0;
+    //cout << "fNum: " << fNum<< endl;
     for(int i=0; i<=fNum; i++){
         uint32_t size = i*sizeof(fileList);
-		fileList *file = reinterpret_cast<fileList *>(base_+size);
-		//need delete file
+		    fileList *file = reinterpret_cast<fileList *>(base_+size);
+        //cout << "file status: "<< file->status << "id: " << file->id << endl;
+		    //need delete file
         if(file->status == fUse) continue;
         if(file->status == fUsing) {
-		  assert(curfile==0);
+		      assert(curfile==0);
           curfile = file;
         }
         //insert 

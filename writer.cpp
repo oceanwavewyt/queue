@@ -13,19 +13,24 @@ Writer::~Writer() {
 
 }
 
+void Writer::SetOffset(int offset) {
+	block_offset_ = offset;
+}
+
 bool Writer::AddRecord(const string &data, size_t length) {
 	const char* ptr = data.c_str();
 	size_t left = length;    
 	bool begin = true;
-	bool s = true;                                                       
+	bool s = true;
+	cout << "AddRecord block_offset_ : "<< block_offset_ << endl;                                                       
 	do {                                                                     
 		const int leftover = kBlockSize - block_offset_;                       
 		assert(leftover >= 0);                                                 
 		if (leftover < kHeaderSize) {                                          
 			//Switch to a new block                                             
 			if (leftover > 0) {                                                  
-				// Fill the trailer (literal below relies on kHeaderSize being 7)  
-				assert(kHeaderSize == 7);                                          
+				// Fill the trailer (literal below relies on kHeaderSize being 11)  
+				assert(kHeaderSize == 11);                                          
 				dest_->Append("\x00\x00\x00\x00\x00\x00", leftover);        
 			}                                                                    
 			block_offset_ = 0;                                                   

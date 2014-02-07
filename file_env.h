@@ -57,6 +57,7 @@ public:
   FixFile(const std::string &fname, int fd);
   ~FixFile();
   int GetCurrentFile(std::string &filename);
+  FileId GetCurrentFileId();
   bool LoadFile();
   //按照时间顺序读取未使用过的文件列表
   void GetUnUse(FILELIST &unuseFiles);
@@ -80,7 +81,11 @@ public:
 	}
 
 	bool NewWritableFile(const std::string& fname, MmapFile** result) {
-		const int fd = open(fname.c_str(), O_CREAT | O_RDWR | O_TRUNC, 0644);
+    int f = O_RDWR;
+    if(access(fname.c_str(),0) == -1) {
+      f = f|O_CREAT|O_TRUNC;
+    }
+		const int fd = open(fname.c_str(),  f , 0644);
 		if (fd < 0) {
 			*result = NULL;
 			return false;
