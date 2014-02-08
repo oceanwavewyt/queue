@@ -83,7 +83,6 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 	QueueFileName::List(fid, filename);
 	Files f;
 	SequentialFile* file;
-	cout<< filename << " NewSequentialFile" <<endl;
   	if(!f.NewSequentialFile(filename, &file)) {
   		return num;
   	}
@@ -92,7 +91,6 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 	string scratch;
 	uint32_t id;
 	while((id = reader.ReadRecord(record, scratch))!=0){
-		cout <<"id: "<< id << endl;
 		if(!id) continue;
 		//cout << "fid: "<< fid << endl;
 		QueueItem *it = new QueueItem(record, id, fid);
@@ -100,7 +98,7 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 		num++;
 	}
 	if(curFileid == fid) {
-		uint64_t a = reader.LastRecordOffset();
+		uint64_t a = reader.LastRecordEndOffset();
 		cout << "offset: " << a << endl;
 		writer_->SetOffset(a);
 	}
@@ -115,7 +113,7 @@ void MemList::ReadTest()
 	qk = head_;	
 	while(qk) {
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
-		qk->data->Str();
+		//qk->data->Str();
 		cout<<endl;
 		qk = qk->next;
 	}

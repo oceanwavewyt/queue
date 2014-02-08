@@ -29,6 +29,7 @@ private:
   char* last_sync_;       // Where have we synced up to
   uint64_t file_offset_;  // Offset of base_ in file
 
+  uint64_t skip_size_;
   // Have we done an munmap of unsynced data?
   bool pending_sync_;
 
@@ -37,6 +38,7 @@ public:
   	~MmapFile();
   static size_t Roundup(size_t x, size_t y);
   bool Append(const char *data, size_t length);
+  bool Skip(uint64_t n); 
 private:
   bool UnmapCurrentRegion();
   bool MapNewRegion();

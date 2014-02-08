@@ -32,18 +32,23 @@ void TestWrite() {
 	f.NewWritableFile(filename, &mfile);	
 	Writer* w = new Writer(mfile);
 	*/
+	/*
 	string testData;
 	testData = "我是ddfdf你大爷qqqqq";
 	MemList::Instance()->WriteRecord(testData, testData.size());
 
 	char testData2[10] = "123456789";	
 	MemList::Instance()->WriteRecord(testData2, 10);
-	/*
-	string dataFilename = "/root/wm_8d580aa8adddaa3776a8cd1516d832ab.jpg";
+	
+	char testData3[15] = "33333333333333";	
+	MemList::Instance()->WriteRecord(testData3, 15);
+	*/
+	
+	string dataFilename = "1.jpg";
 	string imgdata;
 	size_t len = readtest(dataFilename, imgdata);
-	w->AddRecord(imgdata, len);
-	*/
+	MemList::Instance()->WriteRecord(imgdata, len);
+	
 	/*
 	ofstream out2("../tmp/444.jpg",ios::binary);
 		out2<<imgdata;
@@ -51,7 +56,7 @@ void TestWrite() {
 	*/
 }
 
-void TestRead(Files &f, string &filename) {
+void TestRead(Files &f, const string &filename) {
 	SequentialFile* file;
   	f.NewSequentialFile(filename, &file);
 	Reader reader(file,false,0);
@@ -68,9 +73,10 @@ void TestRead(Files &f, string &filename) {
 		//out<<record;
 		//out.close();
 		//}else{
-			cout << "read: " << record << endl;
+			//cout << "read: " << record << endl;
 		//}
-		cout <<"id: "<< id << endl;
+		//cout <<"id: "<< id << endl;
+		//cout << record << " read offset: "<< reader.LastRecordEndOffset() << endl;
 		i++;
 	}
 }
@@ -80,6 +86,8 @@ int main(int argc, char *args[])
 {
 	Files f;
 	
+	//TestRead(f, "./data/queue_0001.lst");
+	//return 1;
 	/*********************/
 	FixFile *fFile;
 	f.NewFixFile("./data/filelist.dat", &fFile);
@@ -95,8 +103,10 @@ int main(int argc, char *args[])
 	string filename;
 	fFile->GetCurrentFile(filename);
 	cout << "current file: " << filename << endl;
+	
 
 	MemList::Instance()->SetWriter(filename);
+
 
 	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
@@ -108,7 +118,7 @@ int main(int argc, char *args[])
 	/*********************/
 	TestWrite();	
 	
-	//TestRead(f, filename);	
+	TestRead(f, filename);	
 	//MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
 	//MemList::Instance()->ReadTest();	

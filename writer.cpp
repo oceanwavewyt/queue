@@ -14,6 +14,7 @@ Writer::~Writer() {
 }
 
 void Writer::SetOffset(int offset) {
+	dest_->Skip(offset);
 	block_offset_ = offset;
 }
 
@@ -22,7 +23,7 @@ bool Writer::AddRecord(const string &data, size_t length) {
 	size_t left = length;    
 	bool begin = true;
 	bool s = true;
-	cout << "AddRecord block_offset_ : "<< block_offset_ << endl;                                                       
+	//cout << "AddRecord block_offset_ : "<< block_offset_ << endl;                                                       
 	do {                                                                     
 		const int leftover = kBlockSize - block_offset_;                       
 		assert(leftover >= 0);                                                 
@@ -93,6 +94,6 @@ bool Writer::EmitPhysicalRecord(RecordType t, const char* ptr, size_t n) {
 		//	s = dest_->Flush();                                                     
 		//}                                                                         
 	}                                                                           
-	block_offset_ += kHeaderSize + n;                                           
+	block_offset_ += kHeaderSize + n;                                          
 	return s;                                                                   
 }                                                                             

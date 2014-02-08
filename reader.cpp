@@ -48,7 +48,6 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
       return 0;
     }
   }
-  cout << "last_record_offset_: " <<last_record_offset_ << endl;
   scratch.clear();
   record.clear();
   bool in_fragmented_record = false;
@@ -78,6 +77,8 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
         scratch.clear();
         record = fragment;
         last_record_offset_ = prospective_record_offset;
+        last_record_end_offset_ = kBlockSize - buffer_.size();
+        //cout << "kFullType: " << last_record_end_offset_ << endl;
         return id;
 
       case kFirstType:
@@ -114,6 +115,9 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
           scratch.append(fragment.data(), fragment.size());
           record = scratch;
           last_record_offset_ = prospective_record_offset;
+          last_record_end_offset_ = kBlockSize - buffer_.size();
+          //cout << "buffer_.size: "<< buffer_.size() << endl;
+          //cout << "kLastType: " << last_record_end_offset_ << endl;
           return id;
         }
         break;
@@ -150,6 +154,11 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
 
 uint64_t Reader::LastRecordOffset() {
   return last_record_offset_;
+}
+
+uint64_t Reader::LastRecordEndOffset() {
+  cout << "last_record_end_offset_: " << last_record_end_offset_ << endl;
+  return last_record_end_offset_;
 }
 
 void Reader::ReportCorruption(size_t bytes, const char* reason) {

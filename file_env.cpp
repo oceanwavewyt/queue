@@ -59,7 +59,6 @@ void FixFile::AddItem(FileId id) {
           file->seq = TimeId(time(NULL));
           file->curpos = 0;
           file->status = fUsing;
-		  cout <<"write status: "<< fUsing << endl;
 		  break;
       }
   } 
@@ -127,6 +126,7 @@ MmapFile::MmapFile(const std::string& fname, int fd, size_t page_size)
         dst_(NULL),
         last_sync_(NULL),
         file_offset_(0),
+        skip_size_(0),
         pending_sync_(false) {
     assert((page_size & (page_size - 1)) == 0);
 }
@@ -138,6 +138,10 @@ MmapFile::~MmapFile() {
     }
 }
 
+bool MmapFile::Skip(uint64_t n) {                             
+  skip_size_ = n;             
+  return true;                                           
+} 
 size_t MmapFile::Roundup(size_t x, size_t y) {
   	return ((x + y - 1) / y) * y;
  } 	
@@ -204,6 +208,10 @@ bool MmapFile::MapNewRegion() {
     limit_ = base_ + map_size_;
     dst_ = base_;
     last_sync_ = base_;
+    if(skip_size_> 0) {
+      dst_ += skip_size_;
+      skip_size_ = 0;
+    }
     return true;
   }
 
