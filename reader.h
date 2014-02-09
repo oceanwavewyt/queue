@@ -49,7 +49,10 @@ class Reader {
   //
   // Undefined before the first call to ReadRecord.
   uint64_t LastRecordOffset();
-  uint64_t LastRecordEndOffset();
+  // Offset of file wrote
+  uint64_t FileEndOffset();
+  // Offset of block position
+  uint64_t BlockEndOffset();
  private:
   SequentialFile* const file_;
   //Reporter* const reporter_;
@@ -62,7 +65,11 @@ class Reader {
   uint64_t last_record_offset_;
   // Offset of the first location past the end of buffer_.
   uint64_t end_of_buffer_offset_;
-
+  // The number of reading block
+  int read_block_num_;
+  // This is read_block_num_-1 
+  int real_read_block_num_;
+  // Offset of the last block 
   uint64_t last_record_end_offset_;
 
   // Offset at which to start looking for the first record to return

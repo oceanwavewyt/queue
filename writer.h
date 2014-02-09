@@ -12,7 +12,7 @@ public:
 	Writer(MmapFile *dest);
 	~Writer();
 	bool AddRecord(const string &data, size_t length);
-	void SetOffset(int offset);
+	void SetOffset(int fileOffset, int blockOffset);
 private:
 	bool EmitPhysicalRecord(RecordType t, const char* ptr, size_t n);                                                       
 };

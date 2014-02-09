@@ -1,5 +1,3 @@
-
-
 #include "format.h"
 #include "file_env.h"
 #include "reader.h"
@@ -13,9 +11,9 @@ Writer::~Writer() {
 
 }
 
-void Writer::SetOffset(int offset) {
-	dest_->Skip(offset);
-	block_offset_ = offset;
+void Writer::SetOffset(int fileOffset, int blockOffset) {
+	dest_->Skip(fileOffset);
+	block_offset_ = blockOffset;
 }
 
 bool Writer::AddRecord(const string &data, size_t length) {
@@ -23,7 +21,6 @@ bool Writer::AddRecord(const string &data, size_t length) {
 	size_t left = length;    
 	bool begin = true;
 	bool s = true;
-	//cout << "AddRecord block_offset_ : "<< block_offset_ << endl;                                                       
 	do {                                                                     
 		const int leftover = kBlockSize - block_offset_;                       
 		assert(leftover >= 0);                                                 

@@ -98,9 +98,10 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 		num++;
 	}
 	if(curFileid == fid) {
-		uint64_t a = reader.LastRecordEndOffset();
-		cout << "offset: " << a << endl;
-		writer_->SetOffset(a);
+		uint64_t fileOffset = reader.FileEndOffset();
+		uint64_t blockOffset = reader.BlockEndOffset();	
+		cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
+		writer_->SetOffset(fileOffset, blockOffset);
 	}
 
 	delete file;	

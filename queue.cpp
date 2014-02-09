@@ -116,9 +116,11 @@ int main(int argc, char *args[])
 
 	
 	/*********************/
-	TestWrite();	
+	if(argc>1) {
+		TestWrite();
+	}	
 	
-	TestRead(f, filename);	
+	//TestRead(f, filename);	
 	//MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
 	//MemList::Instance()->ReadTest();	

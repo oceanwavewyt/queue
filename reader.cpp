@@ -11,6 +11,8 @@ Reader::Reader(SequentialFile* file, bool checksum,
       eof_(false),
       last_record_offset_(0),
       end_of_buffer_offset_(0),
+	  read_block_num_(-1),
+	  real_read_block_num_(0),
       initial_offset_(initial_offset) {
 }
 
@@ -78,6 +80,9 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
         record = fragment;
         last_record_offset_ = prospective_record_offset;
         last_record_end_offset_ = kBlockSize - buffer_.size();
+		if(read_block_num_ != -1) {
+			real_read_block_num_ = read_block_num_;
+		}
         //cout << "kFullType: " << last_record_end_offset_ << endl;
         return id;
 
@@ -116,8 +121,9 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
           record = scratch;
           last_record_offset_ = prospective_record_offset;
           last_record_end_offset_ = kBlockSize - buffer_.size();
-          //cout << "buffer_.size: "<< buffer_.size() << endl;
-          //cout << "kLastType: " << last_record_end_offset_ << endl;
+		  if(read_block_num_ != -1) {
+			real_read_block_num_ = read_block_num_;
+		  }
           return id;
         }
         break;
@@ -156,10 +162,14 @@ uint64_t Reader::LastRecordOffset() {
   return last_record_offset_;
 }
 
-uint64_t Reader::LastRecordEndOffset() {
-  cout << "last_record_end_offset_: " << last_record_end_offset_ << endl;
-  return last_record_end_offset_;
+uint64_t Reader::FileEndOffset() {
+ 	return real_read_block_num_*kBlockSize + last_record_end_offset_; 
 }
+
+uint64_t Reader::BlockEndOffset() {
+	return last_record_end_offset_;
+}
+
 
 void Reader::ReportCorruption(size_t bytes, const char* reason) {
   //ReportDrop(bytes, Status::Corruption(reason));
@@ -180,6 +190,7 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id) {
         buffer_.clear();
         bool s = file_->Read(kBlockSize, buffer_, backing_store_);
         end_of_buffer_offset_ += buffer_.size();
+		read_block_num_++;
         if (!s) {
           buffer_.clear();
           ReportDrop(kBlockSize);

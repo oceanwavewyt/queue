@@ -1,5 +1,6 @@
 #include "file_env.h"
 #include "version.h"
+#include <math.h>
 
 FixFile::FixFile(const std::string &fname, int fd):fd_(fd),
   fname_(fname),startid_(1),curFileid(0){
@@ -195,7 +196,11 @@ bool MmapFile::UnmapCurrentRegion() {
 
 bool MmapFile::MapNewRegion() {
     assert(base_ == NULL);
-    if (ftruncate(fd_, file_offset_ + map_size_) < 0) {
+    if(skip_size_ > 0) {
+      file_offset_ = floor(skip_size_/page_size_)*page_size_;
+      skip_size_ = skip_size_-file_offset_;
+    }
+	if (ftruncate(fd_, file_offset_ + map_size_) < 0) {
       return false;
     }
     void* ptr = mmap(NULL, map_size_, PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -207,11 +212,11 @@ bool MmapFile::MapNewRegion() {
     base_ = reinterpret_cast<char*>(ptr);
     limit_ = base_ + map_size_;
     dst_ = base_;
+	if(skip_size_ > 0) {
+		dst_ += skip_size_;
+		skip_size_ = 0;
+	}
     last_sync_ = base_;
-    if(skip_size_> 0) {
-      dst_ += skip_size_;
-      skip_size_ = 0;
-    }
     return true;
   }
 
