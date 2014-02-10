@@ -17,7 +17,7 @@ MemList::MemList():head_(NULL),tail_(NULL){
 }
 
 MemList::~MemList(){
-
+	delete writer_;
 }
 
 void MemList::SetWriter(string &filename) {
@@ -31,6 +31,9 @@ void MemList::SetWriter(string &filename) {
 }
 
 void MemList::WriteRecord(const string &str, size_t length) {
+	if(Version::Instance()->GetBlockId() >= fMaxBlockNum) {
+		
+	}
 	writer_->AddRecord(str, length);
 }
 

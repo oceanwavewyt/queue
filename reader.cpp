@@ -83,6 +83,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
 		if(read_block_num_ != -1) {
 			real_read_block_num_ = read_block_num_;
 		}
+		Version::Instance()->SetBlockInterId();
         //cout << "kFullType: " << last_record_end_offset_ << endl;
         return id;
 
@@ -124,6 +125,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
 		  if(read_block_num_ != -1) {
 			real_read_block_num_ = read_block_num_;
 		  }
+		  Version::Instance()->SetBlockInterId();	
           return id;
         }
         break;
@@ -191,6 +193,7 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id) {
         bool s = file_->Read(kBlockSize, buffer_, backing_store_);
         end_of_buffer_offset_ += buffer_.size();
 		read_block_num_++;
+		Version::Instance()->SetBlockId();
         if (!s) {
           buffer_.clear();
           ReportDrop(kBlockSize);
@@ -227,9 +230,6 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id) {
 
     id = iid | (bid << 16);
 	
-	//cout << "length: " << length << endl;
-    //cout << "id: " << id<< endl;
-    Version::Instance()->Init(bid, iid);
     if (kHeaderSize + length > buffer_.size()) {
       size_t drop_size = buffer_.size();
       buffer_.clear();

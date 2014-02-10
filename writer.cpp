@@ -8,7 +8,7 @@ Writer::Writer(MmapFile *dest): dest_(dest),block_offset_(0){
 		
 }
 Writer::~Writer() {
-
+	delete dest_;
 }
 
 void Writer::SetOffset(int fileOffset, int blockOffset) {
