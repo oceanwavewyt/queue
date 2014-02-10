@@ -2,6 +2,7 @@
 #include "file_env.h"
 #include "reader.h"
 #include "writer.h"
+#include "version.h"
 
 MemList *MemList::instance_ = NULL;
 
