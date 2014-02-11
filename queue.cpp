@@ -104,13 +104,13 @@ int main(int argc, char *args[])
 	fFile->GetCurrentFile(filename);
 	cout << "current file: " << filename << endl;
 	
-
+	MemList::Instance()->SetFilelist(fFile);
 	MemList::Instance()->SetWriter(filename);
 
 
 	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
-	MemList::Instance()->ReadTest();	
+	//MemList::Instance()->ReadTest();	
 
 	
 

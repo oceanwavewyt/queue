@@ -31,19 +31,34 @@ FixFile::~FixFile(){
 
 int FixFile::GetCurrentFile(std::string &filename) {
   if(!curFileid) {
-      curFileid = startid_;
-      AddItem(curFileid);
+	  curFileid = GetCurrentFileId();
   }
   QueueFileName::List(curFileid, filename);
   return 0;
 }
 
 FileId FixFile::GetCurrentFileId() {
-  if(!curFileid) {
-      curFileid = startid_;
-      AddItem(curFileid);
-  }
-  return curFileid;
+	if(curFileid) return curFileid;
+	int firstUse = -1;
+	for(int i=0; i<=fNum; i++){                                   
+		uint32_t size = i*sizeof(fileList);                       
+    	fileList *file = reinterpret_cast<fileList *>(base_+size);
+    	if(file->status == fUse && firstUse == -1) {
+			firstUse = i;
+		}                       
+        if(file->status == fUsing) {
+			return file->id;
+		}                                                                   
+	}                                                             	
+	//no find and set Using
+	assert(firstUse!=-1);
+	uint32_t size = firstUse*sizeof(fileList);
+	fileList *file = reinterpret_cast<fileList *>(base_+size);
+	file->id = firstUse+1;
+    file->seq = TimeId(time(NULL));
+    file->curpos = 0;
+    file->status = fUsing;
+	return file->id;
 }
 
 void FixFile::SetItemNumber(ItemNumber id) {
@@ -51,18 +66,13 @@ void FixFile::SetItemNumber(ItemNumber id) {
 
 }
 
-void FixFile::AddItem(FileId id) {
-  for(int i=0; i<=fNum; i++){
-	  uint32_t size = i*sizeof(fileList);
-      fileList *file = reinterpret_cast<fileList *>(base_+size);
-      if(file->status == fUse) {
-          file->id = id;
-          file->seq = TimeId(time(NULL));
-          file->curpos = 0;
-          file->status = fUsing;
-		  break;
-      }
-  } 
+void FixFile::ReleaseCurFile() {
+	if(curFileid == 0) return;
+ 	assert(curFileid<=fNum);
+	uint32_t s = (curFileid-1)*sizeof(fileList);
+	fileList *file = reinterpret_cast<fileList *>(base_+s);
+	file->status = fUnUse;  				
+	curFileid = 0;
 }
 
 void FixFile::GetUnUse(FILELIST &unuseFiles) {

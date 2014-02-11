@@ -64,7 +64,7 @@ public:
   //按照时间顺序读取未使用过的文件列表
   void GetUnUse(FILELIST &unuseFiles);
   void SetItemNumber(ItemNumber id);
-  void AddItem(FileId id);
+  void ReleaseCurFile();
 private:
   int fd_;
   std::string fname_;

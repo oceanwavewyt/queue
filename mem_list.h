@@ -1,6 +1,7 @@
 #ifndef MEM_LIST_H_
 #define MEM_LIST_H_
 #include "format.h"
+#include "file_env.h"
 
 class Writer;
 class QueueItem {
@@ -49,6 +50,7 @@ public:
 class MemList
 {
 	static MemList *instance_;
+	FixFile *filelist_;
 public:
 	static MemList *Instance();
 	MemList();	
@@ -61,6 +63,7 @@ public:
 	
 	void SetWriter(string &filename); 
 	void WriteRecord(const string &str, size_t length);
+	void SetFilelist(FixFile *f);
 
 	void ReadTest(); 
 private:

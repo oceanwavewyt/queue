@@ -21,7 +21,13 @@ MemList::~MemList(){
 	delete writer_;
 }
 
+void MemList::SetFilelist(FixFile *f) {
+	filelist_ = f;
+}
+
+
 void MemList::SetWriter(string &filename) {
+	if(writer_) delete writer_;
 	MmapFile *mfile;
 	Files f;
 	if(!f.NewWritableFile(filename, &mfile)) {
@@ -32,8 +38,12 @@ void MemList::SetWriter(string &filename) {
 }
 
 void MemList::WriteRecord(const string &str, size_t length) {
+	cout << "blockid: "<< Version::Instance()->GetBlockId() << endl;	
 	if(Version::Instance()->GetBlockId() >= fMaxBlockNum) {
-		
+		filelist_->ReleaseCurFile();
+		string filename;
+		filelist_->GetCurrentFile(filename);
+		SetWriter(filename);	
 	}
 	writer_->AddRecord(str, length);
 }
@@ -74,8 +84,10 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 	FILELIST::iterator it;
 	uint64_t num = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
-		//cout << it->first << "\t"<< (FileId)it->second <<endl;
-		num += LoadFile(it->second, curFileid);	
+		//cout <<"time: "<< it->first << "\tid: " << it->second << endl;
+		Version::Instance()->Init(1,1);
+		num += LoadFile(it->second, curFileid);
+		//GetCurrentFileId
 	}
 	return num;	
 }
