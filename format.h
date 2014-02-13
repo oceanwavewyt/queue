@@ -58,6 +58,9 @@ enum FileStatus {
 static const int fNum = 100;
 static const uint32_t fMaxBlockNum = 1000; //65535;
 
+//memory buffer size
+static const uint64_t mMaxBufferSize = 1024*1024*10; //10M
+
 typedef uint16_t FileId;
 typedef uint32_t ItemNumber;
 typedef uint64_t TimeId;

@@ -13,8 +13,11 @@ MemList *MemList::Instance()
 	return instance_;
 }
 
-MemList::MemList():head_(NULL),tail_(NULL){
+MemList::MemList():head_(NULL),tail_(NULL),currentMem_(0) {
 	length_ = 0;
+	loadinfo_.isComplete = true;
+	loadinfo_.fid = 0;
+	loadinfo_.pos = 0;
 }
 
 MemList::~MemList(){
@@ -87,7 +90,7 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 		//cout <<"time: "<< it->first << "\tid: " << it->second << endl;
 		Version::Instance()->Init(1,1);
 		num += LoadFile(it->second, curFileid);
-		//GetCurrentFileId
+		
 	}
 	return num;	
 }
@@ -108,9 +111,14 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 	uint32_t id;
 	while((id = reader.ReadRecord(record, scratch))!=0){
 		if(!id) continue;
-		//cout << "fid: "<< fid << endl;
-		QueueItem *it = new QueueItem(record, id, fid);
-		Push(it);
+		if(currentMem_ <= mMaxBufferSize) {
+			QueueItem *it = new QueueItem(record, id, fid);
+			Push(it);
+			currentMem_ += record.size();
+			//cout << "currentMem_: "<< currentMem_/1024/1024 << endl;
+		}else{
+			if(curFileid != fid) break;
+		}
 		num++;
 	}
 	if(curFileid == fid) {

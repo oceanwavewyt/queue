@@ -72,6 +72,15 @@ private:
 	QueueLink *head_;
 	QueueLink *tail_;
 	uint64_t length_;
-	Writer *writer_;	
+	Writer *writer_;
+	//load file paramater
+	struct LoadInfo {
+		bool isComplete;
+		int fid;
+		uint64_t pos;
+	};
+	LoadInfo loadinfo_;
+
+	uint64_t currentMem_;
 };
 #endif
