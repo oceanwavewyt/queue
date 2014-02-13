@@ -115,8 +115,11 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 			QueueItem *it = new QueueItem(record, id, fid);
 			Push(it);
 			currentMem_ += record.size();
+			loadinfo_.fid = fid;
+			loadinfo_.pos = id;
 			//cout << "currentMem_: "<< currentMem_/1024/1024 << endl;
 		}else{
+			loadinfo_.isComplete = false;
 			if(curFileid != fid) break;
 		}
 		num++;
