@@ -67,7 +67,7 @@ public:
 
 	void ReadTest(); 
 private:
-	uint64_t LoadFile(FileId id,FileId curFileid);
+	uint64_t LoadFile(FileId id, uint64_t pos, FileId curFileid=0);
 private:
 	QueueLink *head_;
 	QueueLink *tail_;

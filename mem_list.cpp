@@ -89,13 +89,13 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 	for(it = flist.begin(); it!=flist.end(); it++) {
 		//cout <<"time: "<< it->first << "\tid: " << it->second << endl;
 		Version::Instance()->Init(1,1);
-		num += LoadFile(it->second, curFileid);
+		num += LoadFile(it->second, 0, curFileid);
 		
 	}
 	return num;	
 }
 
-uint64_t MemList::LoadFile(FileId fid, FileId curFileid) 
+uint64_t MemList::LoadFile(FileId fid, uint64_t p, FileId curFileid) 
 {
 	string filename;
 	uint64_t num=0;
@@ -124,14 +124,12 @@ uint64_t MemList::LoadFile(FileId fid, FileId curFileid)
 		}
 		num++;
 	}
-	if(curFileid == fid) {
-		uint64_t fileOffset = reader.FileEndOffset();
-		uint64_t blockOffset = reader.BlockEndOffset();	
-		cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
-		writer_->SetOffset(fileOffset, blockOffset);
-	}
-
-	delete file;	
+	delete file;
+	if(curFileid != fid) return num;
+	uint64_t fileOffset = reader.FileEndOffset();
+	uint64_t blockOffset = reader.BlockEndOffset();	
+	cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
+	writer_->SetOffset(fileOffset, blockOffset);
 	return num;
 }
 
