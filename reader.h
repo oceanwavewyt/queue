@@ -72,9 +72,11 @@ class Reader {
   // Offset of the last block 
   uint64_t last_record_end_offset_;
 
+  // Offset of the first block	
+  size_t offset_in_block_;
   // Offset at which to start looking for the first record to return
   uint64_t const initial_offset_;
-
+  	
   // Extend record types with the following special values
   enum {
     kEof = kMaxRecordType + 1,

@@ -13,6 +13,7 @@ Reader::Reader(SequentialFile* file, bool checksum,
       end_of_buffer_offset_(0),
 	  read_block_num_(-1),
 	  real_read_block_num_(0),
+	  offset_in_block_(0),
       initial_offset_(initial_offset) {
 }
 
@@ -21,12 +22,12 @@ Reader::~Reader() {
 }
 
 bool Reader::SkipToInitialBlock() {
-  size_t offset_in_block = initial_offset_ % kBlockSize;
-  uint64_t block_start_location = initial_offset_ - offset_in_block;
+  offset_in_block_ = initial_offset_ % kBlockSize;
+  uint64_t block_start_location = initial_offset_ - offset_in_block_;
 
   // Don't search a block if we'd be in the trailer
-  if (offset_in_block > kBlockSize - 6) {
-    offset_in_block = 0;
+  if (offset_in_block_ > kBlockSize - 6) {
+    offset_in_block_ = 0;
     block_start_location += kBlockSize;
   }
 
@@ -192,6 +193,10 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id) {
         buffer_.clear();
         bool s = file_->Read(kBlockSize, buffer_, backing_store_);
         end_of_buffer_offset_ += buffer_.size();
+		if(offset_in_block_ > 0) {
+			buffer_ = buffer_.substr(offset_in_block_);
+			offset_in_block_ = 0;
+		}
 		read_block_num_++;
 		Version::Instance()->SetBlockId();
         if (!s) {

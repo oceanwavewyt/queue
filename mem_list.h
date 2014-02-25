@@ -4,6 +4,7 @@
 #include "file_env.h"
 
 class Writer;
+class Reader;
 class QueueItem {
 	uint32_t length_;
 	uint32_t id_;
@@ -67,12 +68,15 @@ public:
 
 	void ReadTest(); 
 private:
-	uint64_t LoadFile(FileId id, uint64_t pos, FileId curFileid=0);
+	int LoadFile(FileId id, uint64_t pos);
+	Reader *GetCurrentReader(FileId fid);
+	void SetCurrWriterPos(FileId curFileid); 
 private:
 	QueueLink *head_;
 	QueueLink *tail_;
 	uint64_t length_;
 	Writer *writer_;
+	Reader *reader_;
 	//load file paramater
 	struct LoadInfo {
 		bool isComplete;

@@ -85,25 +85,58 @@ void MemList::Delete()
 uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 {
 	FILELIST::iterator it;
-	uint64_t num = 0;
+	int readOver = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
 		//cout <<"time: "<< it->first << "\tid: " << it->second << endl;
 		Version::Instance()->Init(1,1);
-		num += LoadFile(it->second, 0, curFileid);
-		
+		if(readOver == 0) {
+			readOver = LoadFile(it->second, 0);
+		}
 	}
-	return num;	
+	SetCurrWriterPos(curFileid);
+	return 0;	
 }
 
-uint64_t MemList::LoadFile(FileId fid, uint64_t p, FileId curFileid) 
+Reader *MemList::GetCurrentReader(FileId fid) 
 {
+	if(reader_) return reader_;
 	string filename;
-	uint64_t num=0;
 	QueueFileName::List(fid, filename);
 	Files f;
 	SequentialFile* file;
+	if(!f.NewSequentialFile(filename, &file)) {
+	  	return NULL;		
+	}
+	reader_ = new Reader(file,false,0);
+	return reader_;
+}
+
+int MemList::LoadFile(FileId fid, uint64_t p) 
+{
+	Reader *r = GetCurrentReader(fid);
+	string record;
+	string scratch;
+	uint32_t id;
+	while((id = r->ReadRecord(record, scratch))!=0){
+		if(!id) continue;
+		if(currentMem_ > mMaxBufferSize) return 1; 
+		QueueItem *it = new QueueItem(record, id, fid);
+		Push(it);
+		currentMem_ += record.size();
+	}
+	delete r;
+	return 0;
+}
+
+void MemList::SetCurrWriterPos(FileId curFileid)
+{
+	string filename;
+	QueueFileName::List(curFileid, filename);
+	Files f;
+	SequentialFile* file;
   	if(!f.NewSequentialFile(filename, &file)) {
-  		return num;
+  		cout << "MemList::SetCurrWriterPos failed" << endl;
+		exit(1);
   	}
 	Reader reader(file,false,0);
 	string record;
@@ -111,27 +144,15 @@ uint64_t MemList::LoadFile(FileId fid, uint64_t p, FileId curFileid)
 	uint32_t id;
 	while((id = reader.ReadRecord(record, scratch))!=0){
 		if(!id) continue;
-		if(currentMem_ <= mMaxBufferSize) {
-			QueueItem *it = new QueueItem(record, id, fid);
-			Push(it);
-			currentMem_ += record.size();
-			loadinfo_.fid = fid;
-			loadinfo_.pos = id;
-			//cout << "currentMem_: "<< currentMem_/1024/1024 << endl;
-		}else{
-			loadinfo_.isComplete = false;
-			if(curFileid != fid) break;
-		}
-		num++;
 	}
 	delete file;
-	if(curFileid != fid) return num;
 	uint64_t fileOffset = reader.FileEndOffset();
 	uint64_t blockOffset = reader.BlockEndOffset();	
 	cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
 	writer_->SetOffset(fileOffset, blockOffset);
-	return num;
 }
+
+
 
 void MemList::ReadTest()
 {
