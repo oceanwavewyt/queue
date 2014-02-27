@@ -65,7 +65,12 @@ typedef uint16_t FileId;
 typedef uint32_t ItemNumber;
 typedef uint64_t TimeId;
 
-typedef std::map<TimeId, FileId> FILELIST; 
+typedef struct filepos{
+    FileId id;
+    uint32_t blockid;
+	ItemNumber curpos;
+}filePos;
+typedef std::map<TimeId, filePos> FILELIST; 
 
 class QueueFileName
 {

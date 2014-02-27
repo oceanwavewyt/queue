@@ -43,7 +43,7 @@ class Reader {
   // "*scratch" as temporary storage.  The contents filled in *record
   // will only be valid until the next mutating operation on this
   // reader or the next mutation to *scratch.
-  uint32_t ReadRecord(string &record, std::string& scratch);
+  uint32_t ReadRecord(string &record, std::string& scratch, uint32_t &blockid);
 
   // Returns the physical offset of the last record returned by ReadRecord.
   //
@@ -94,7 +94,7 @@ class Reader {
   bool SkipToInitialBlock();
 
   // Return type, or one of the preceding special values
-  unsigned int ReadPhysicalRecord(string &result, uint32_t &id);
+  unsigned int ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &blockid);
 
   // Reports dropped bytes to the reporter.
   // buffer_ must be updated to remove the dropped bytes prior to invocation.

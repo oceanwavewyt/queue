@@ -1,3 +1,4 @@
+#include "format.h"
 #include "file_env.h"
 #include "version.h"
 #include <math.h>
@@ -56,14 +57,18 @@ FileId FixFile::GetCurrentFileId() {
 	fileList *file = reinterpret_cast<fileList *>(base_+size);
 	file->id = firstUse+1;
     file->seq = TimeId(time(NULL));
-    file->curpos = 0;
+    file->blockid = 0;
+	file->curpos = 0;
     file->status = fUsing;
 	return file->id;
 }
 
-void FixFile::SetItemNumber(ItemNumber id) {
-		
-
+void FixFile::SetItemNumber(uint32_t blockid, ItemNumber id) {
+	assert(curFileid!=NULL);		
+	uint32_t size = curFileid*sizeof(fileList);                
+	fileList *file = reinterpret_cast<fileList *>(base_+size);	
+	file->blockid = blockid;	
+	file->curpos = id;
 }
 
 void FixFile::ReleaseCurFile() {
@@ -80,7 +85,7 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
     //cout << "fNum: " << fNum<< endl;
     for(int i=0; i<=fNum; i++){
         uint32_t size = i*sizeof(fileList);
-		    fileList *file = reinterpret_cast<fileList *>(base_+size);
+		fileList *file = reinterpret_cast<fileList *>(base_+size);
         //cout << "file status: "<< file->status << "id: " << file->id << endl;
 		    //need delete file
         if(file->status == fUse) continue;
@@ -89,7 +94,11 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
           curfile = file;
         }
         //insert 
-        unuseFiles[file->seq] = static_cast<FileId>(file->id);
+       	filePos fpos;
+		fpos.id = static_cast<FileId>(file->id);
+		fpos.blockid = file->blockid;
+		fpos.curpos = file->curpos;
+		unuseFiles[file->seq] = fpos;
     }
     if(curfile) {
         curFileid = curfile->id;

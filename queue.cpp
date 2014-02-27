@@ -64,7 +64,8 @@ void TestRead(Files &f, const string &filename) {
 	string scratch;
 	int i=0;
 	uint32_t id;
-	while((id = reader.ReadRecord(record, scratch))!=0){
+	uint32_t blockid;
+	while((id = reader.ReadRecord(record, scratch, blockid))!=0){
 		//cout << "read: " << record << endl;
 		//if(i==2) {
 		//char name[20];
@@ -97,7 +98,7 @@ int main(int argc, char *args[])
 		exit(1);
 	}
 	//load to memory
-	std::map<TimeId, FileId> fileMapList;
+	FILELIST fileMapList;
 	fFile->GetUnUse(fileMapList);
 
 	string filename;
@@ -112,8 +113,10 @@ int main(int argc, char *args[])
 	
 	//MemList::Instance()->ReadTest();	
 
+	//read data
+	QueueItem *item = MemList::Instance()->Pop();	
 	
-
+	cout << "pop: "<< item->Id() << endl;	
 	
 	/*********************/
 	if(argc>1) {

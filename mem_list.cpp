@@ -15,9 +15,6 @@ MemList *MemList::Instance()
 
 MemList::MemList():head_(NULL),tail_(NULL),currentMem_(0) {
 	length_ = 0;
-	loadinfo_.isComplete = true;
-	loadinfo_.fid = 0;
-	loadinfo_.pos = 0;
 }
 
 MemList::~MemList(){
@@ -78,6 +75,7 @@ void MemList::Delete()
 	if(head_ == NULL) return;
 	QueueLink *curit = head_;
 	head_ = head_->next;
+	filelist_->SetItemNumber(curit->data->Blockid(), curit->data->Id());
 	delete curit;
 	length_--;
 }
@@ -90,14 +88,15 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 		//cout <<"time: "<< it->first << "\tid: " << it->second << endl;
 		Version::Instance()->Init(1,1);
 		if(readOver == 0) {
-			readOver = LoadFile(it->second, 0);
+			uint64_t pos = kBlockSize*it->second.curpos;
+			readOver = LoadFile(it->second.id, pos);
 		}
 	}
 	SetCurrWriterPos(curFileid);
 	return 0;	
 }
 
-Reader *MemList::GetCurrentReader(FileId fid) 
+Reader *MemList::GetCurrentReader(FileId fid, uint64_t pos) 
 {
 	if(reader_) return reader_;
 	string filename;
@@ -107,20 +106,21 @@ Reader *MemList::GetCurrentReader(FileId fid)
 	if(!f.NewSequentialFile(filename, &file)) {
 	  	return NULL;		
 	}
-	reader_ = new Reader(file,false,0);
+	reader_ = new Reader(file,false,pos);
 	return reader_;
 }
 
 int MemList::LoadFile(FileId fid, uint64_t p) 
 {
-	Reader *r = GetCurrentReader(fid);
+	Reader *r = GetCurrentReader(fid, p);
 	string record;
 	string scratch;
 	uint32_t id;
-	while((id = r->ReadRecord(record, scratch))!=0){
+	uint32_t blockid=0;
+	while((id = r->ReadRecord(record, scratch, blockid))!=0){
 		if(!id) continue;
 		if(currentMem_ > mMaxBufferSize) return 1; 
-		QueueItem *it = new QueueItem(record, id, fid);
+		QueueItem *it = new QueueItem(record, id, blockid, fid);
 		Push(it);
 		currentMem_ += record.size();
 	}
@@ -142,7 +142,8 @@ void MemList::SetCurrWriterPos(FileId curFileid)
 	string record;
 	string scratch;
 	uint32_t id;
-	while((id = reader.ReadRecord(record, scratch))!=0){
+	uint32_t blockid;
+	while((id = reader.ReadRecord(record, scratch, blockid))!=0){
 		if(!id) continue;
 	}
 	delete file;
@@ -161,6 +162,7 @@ void MemList::ReadTest()
 	while(qk) {
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
 		//qk->data->Str();
+		cout << "\tblockid: "<<qk->data->Blockid();
 		cout<<endl;
 		qk = qk->next;
 	}

@@ -45,7 +45,7 @@ bool Reader::SkipToInitialBlock() {
   return true;
 }
 
-uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
+uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &blockid) {
   if (last_record_offset_ < initial_offset_) {
     if (!SkipToInitialBlock()) {
       return 0;
@@ -62,7 +62,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch) {
   while (true) {
     uint64_t physical_record_offset = end_of_buffer_offset_ - buffer_.size();
 	uint32_t id;
-    const unsigned int record_type = ReadPhysicalRecord(fragment, id);
+    const unsigned int record_type = ReadPhysicalRecord(fragment, id, blockid);
     switch (record_type) {
       case kFullType:
         if (in_fragmented_record) {
@@ -185,7 +185,7 @@ void Reader::ReportDrop(size_t bytes) {
   //}
 }
 
-unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id) {
+unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &blockid) {
   while (true) {
     if (buffer_.size() < kHeaderSize) {
       if (!eof_) {
@@ -234,6 +234,7 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id) {
     const uint32_t iid = e | (f << 8);
 
     id = iid | (bid << 16);
+	blockid = bid;
 	
     if (kHeaderSize + length > buffer_.size()) {
       size_t drop_size = buffer_.size();

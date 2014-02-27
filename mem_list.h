@@ -8,10 +8,11 @@ class Reader;
 class QueueItem {
 	uint32_t length_;
 	uint32_t id_;
+	uint32_t bid_;
 	FileId fid_;
 	char *str_;
 public:
-	QueueItem(string &record, uint32_t id, FileId fid):id_(id),fid_(fid) {
+	QueueItem(string &record, uint32_t id, uint32_t bid, FileId fid):id_(id),bid_(bid),fid_(fid) {
 		assert(record.size()!=0);
 		length_ = record.size();
 		str_ = (char *)malloc(record.size());
@@ -22,6 +23,9 @@ public:
 	}
 	uint32_t Id() {
 		return id_;
+	}
+	uint32_t Blockid() {
+		return bid_;
 	}
 	FileId Fileid() {
 		return fid_;
@@ -69,7 +73,7 @@ public:
 	void ReadTest(); 
 private:
 	int LoadFile(FileId id, uint64_t pos);
-	Reader *GetCurrentReader(FileId fid);
+	Reader *GetCurrentReader(FileId fid, uint64_t pos=0);
 	void SetCurrWriterPos(FileId curFileid); 
 private:
 	QueueLink *head_;
@@ -77,14 +81,6 @@ private:
 	uint64_t length_;
 	Writer *writer_;
 	Reader *reader_;
-	//load file paramater
-	struct LoadInfo {
-		bool isComplete;
-		int fid;
-		uint64_t pos;
-	};
-	LoadInfo loadinfo_;
-
 	uint64_t currentMem_;
 };
 #endif

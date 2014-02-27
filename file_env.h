@@ -51,7 +51,8 @@ class FixFile
   typedef struct filelist{
     FileId id;
     TimeId seq;
-    ItemNumber curpos;
+    uint32_t blockid;
+	ItemNumber curpos;
     FileStatus status;
   }fileList;
 
@@ -63,7 +64,7 @@ public:
   bool LoadFile();
   //按照时间顺序读取未使用过的文件列表
   void GetUnUse(FILELIST &unuseFiles);
-  void SetItemNumber(ItemNumber id);
+  void SetItemNumber(uint32_t blockid, ItemNumber id);
   void ReleaseCurFile();
 private:
   int fd_;
