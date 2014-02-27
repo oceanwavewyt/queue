@@ -69,6 +69,12 @@ typedef struct filepos{
     FileId id;
     uint32_t blockid;
 	ItemNumber curpos;
+	struct filepos& operator= (struct filepos &s) {
+		id = s.id;
+		blockid = s.blockid;
+		curpos = s.curpos;
+		return *this;
+	}
 }filePos;
 typedef std::map<TimeId, filePos> FILELIST; 
 

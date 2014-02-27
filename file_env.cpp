@@ -86,7 +86,7 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
     for(int i=0; i<=fNum; i++){
         uint32_t size = i*sizeof(fileList);
 		fileList *file = reinterpret_cast<fileList *>(base_+size);
-        //cout << "file status: "<< file->status << "id: " << file->id << endl;
+        cout << "file status: "<< file->status << " id: " << file->id << "  blockid: "<<file->blockid << " pos: "<<file->curpos << endl;
 		    //need delete file
         if(file->status == fUse) continue;
         if(file->status == fUsing) {
