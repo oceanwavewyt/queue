@@ -63,9 +63,9 @@ FileId FixFile::GetCurrentFileId() {
 	return file->id;
 }
 
-void FixFile::SetItemNumber(uint32_t blockid, ItemNumber id) {
-	assert(curFileid!=NULL);		
-	uint32_t size = curFileid*sizeof(fileList);                
+void FixFile::SetItemNumber(FileId fid, uint32_t blockid, ItemNumber id) {
+	cout << "setItemNumber: "<<blockid << "\tid: "<< id << "\tfileid:"<<fid << endl;
+	uint32_t size = (fid-1)*sizeof(fileList);                
 	fileList *file = reinterpret_cast<fileList *>(base_+size);	
 	file->blockid = blockid;	
 	file->curpos = id;
@@ -86,7 +86,9 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
     for(int i=0; i<=fNum; i++){
         uint32_t size = i*sizeof(fileList);
 		fileList *file = reinterpret_cast<fileList *>(base_+size);
-        cout << "file status: "<< file->status << " id: " << file->id << "  blockid: "<<file->blockid << " pos: "<<file->curpos << endl;
+        if(file->id) {
+			cout << "file status: "<< file->status << " id: " << file->id << "  blockid: "<<file->blockid << " pos: "<<file->curpos << endl;
+		}
 		    //need delete file
         if(file->status == fUse) continue;
         if(file->status == fUsing) {

@@ -75,7 +75,7 @@ void MemList::Delete()
 	if(head_ == NULL) return;
 	QueueLink *curit = head_;
 	head_ = head_->next;
-	filelist_->SetItemNumber(curit->data->Blockid(), curit->data->Id());
+	filelist_->SetItemNumber(curit->data->Fileid(), curit->data->Blockid(), curit->data->Id());
 	delete curit;
 	length_--;
 }
@@ -85,10 +85,11 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 	FILELIST::iterator it;
 	int readOver = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
-		//cout <<"time: "<< it->first << "\tid: " << it->second << endl;
+		cout <<"time: "<< it->first << "\tid: " << it->second.blockid << endl;
 		Version::Instance()->Init(1,1);
 		if(readOver == 0) {
-			uint64_t pos = kBlockSize*it->second.curpos;
+			uint64_t pos = kBlockSize*it->second.blockid;
+			cout <<"readOver: "<<readOver << "  ss: "<< it->second.id << endl;
 			readOver = LoadFile(it->second.id, pos);
 		}
 	}
@@ -107,6 +108,7 @@ Reader *MemList::GetCurrentReader(FileId fid, uint64_t pos)
 	  	return NULL;		
 	}
 	reader_ = new Reader(file,false,pos);
+	cout << "new Reader " << endl;
 	return reader_;
 }
 
@@ -124,7 +126,9 @@ int MemList::LoadFile(FileId fid, uint64_t p)
 		Push(it);
 		currentMem_ += record.size();
 	}
+	cout << "delete reader " <<endl;
 	delete r;
+	reader_ = NULL;
 	return 0;
 }
 

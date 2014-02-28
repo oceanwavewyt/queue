@@ -10,9 +10,10 @@ Reader::Reader(SequentialFile* file, bool checksum,
       buffer_(),
       eof_(false),
       last_record_offset_(0),
-      end_of_buffer_offset_(0),
+	  end_of_buffer_offset_(0),
 	  read_block_num_(-1),
 	  real_read_block_num_(0),
+      last_record_end_offset_(0),
 	  offset_in_block_(0),
       initial_offset_(initial_offset) {
 }
@@ -60,7 +61,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
 
   string fragment;
   while (true) {
-    uint64_t physical_record_offset = end_of_buffer_offset_ - buffer_.size();
+	uint64_t physical_record_offset = end_of_buffer_offset_ - buffer_.size();
 	uint32_t id;
     const unsigned int record_type = ReadPhysicalRecord(fragment, id, blockid);
     switch (record_type) {

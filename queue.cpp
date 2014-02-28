@@ -118,6 +118,8 @@ int main(int argc, char *args[])
 	
 	cout << "pop: "<< item->Id() << endl;	
 	
+	MemList::Instance()->Delete();
+	
 	/*********************/
 	if(argc>1) {
 		TestWrite();

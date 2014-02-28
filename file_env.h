@@ -64,7 +64,7 @@ public:
   bool LoadFile();
   //按照时间顺序读取未使用过的文件列表
   void GetUnUse(FILELIST &unuseFiles);
-  void SetItemNumber(uint32_t blockid, ItemNumber id);
+  void SetItemNumber(FileId fid, uint32_t blockid, ItemNumber id);
   void ReleaseCurFile();
 private:
   int fd_;
