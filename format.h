@@ -68,10 +68,12 @@ typedef uint64_t TimeId;
 typedef struct filepos{
     FileId id;
     uint32_t blockid;
+	uint32_t offset;
 	ItemNumber curpos;
 	struct filepos& operator= (struct filepos &s) {
 		id = s.id;
 		blockid = s.blockid;
+		offset = s.offset;
 		curpos = s.curpos;
 		return *this;
 	}

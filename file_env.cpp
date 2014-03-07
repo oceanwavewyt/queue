@@ -58,16 +58,18 @@ FileId FixFile::GetCurrentFileId() {
 	file->id = firstUse+1;
     file->seq = TimeId(time(NULL));
     file->blockid = 0;
+	file->offset = 0;
 	file->curpos = 0;
     file->status = fUsing;
 	return file->id;
 }
 
-void FixFile::SetItemNumber(FileId fid, uint32_t blockid, ItemNumber id) {
+void FixFile::SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id) {
 	cout << "setItemNumber: "<<blockid << "\tid: "<< id << "\tfileid:"<<fid << endl;
 	uint32_t size = (fid-1)*sizeof(fileList);                
 	fileList *file = reinterpret_cast<fileList *>(base_+size);	
-	file->blockid = blockid;	
+	file->blockid = blockid;
+	file->offset = blockOffset;	
 	file->curpos = id;
 }
 
@@ -99,6 +101,7 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
        	filePos fpos;
 		fpos.id = static_cast<FileId>(file->id);
 		fpos.blockid = file->blockid;
+		fpos.offset = file->offset;
 		fpos.curpos = file->curpos;
 		unuseFiles[file->seq] = fpos;
     }

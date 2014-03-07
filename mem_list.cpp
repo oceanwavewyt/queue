@@ -75,7 +75,7 @@ void MemList::Delete()
 	if(head_ == NULL) return;
 	QueueLink *curit = head_;
 	head_ = head_->next;
-	filelist_->SetItemNumber(curit->data->Fileid(), curit->data->Blockid(), curit->data->Id());
+	filelist_->SetItemNumber(curit->data->Fileid(), curit->data->Blockid(), curit->data->Offset(), curit->data->Id());
 	delete curit;
 	length_--;
 }
@@ -85,11 +85,11 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 	FILELIST::iterator it;
 	int readOver = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
-		cout <<"time: "<< it->first << "\tid: " << it->second.blockid << endl;
+		//cout <<"time: "<< it->first << "\tid: " << it->second.blockid << endl;
 		Version::Instance()->Init(1,1);
 		if(readOver == 0) {
-			uint64_t pos = kBlockSize*it->second.blockid;
-			cout <<"readOver: "<<readOver << "  ss: "<< it->second.id << endl;
+			uint64_t pos = kBlockSize*it->second.blockid + it->second.offset;
+			cout <<"readOver: "<<readOver << "  block_offset: "<< it->second.offset << endl;
 			readOver = LoadFile(it->second.id, pos);
 		}
 	}
@@ -108,7 +108,6 @@ Reader *MemList::GetCurrentReader(FileId fid, uint64_t pos)
 	  	return NULL;		
 	}
 	reader_ = new Reader(file,false,pos);
-	cout << "new Reader " << endl;
 	return reader_;
 }
 
@@ -122,11 +121,11 @@ int MemList::LoadFile(FileId fid, uint64_t p)
 	while((id = r->ReadRecord(record, scratch, blockid))!=0){
 		if(!id) continue;
 		if(currentMem_ > mMaxBufferSize) return 1; 
-		QueueItem *it = new QueueItem(record, id, blockid, fid);
+		uint64_t blockOffset = r->BlockEndOffset();
+		QueueItem *it = new QueueItem(record, id, blockid, blockOffset , fid);
 		Push(it);
 		currentMem_ += record.size();
 	}
-	cout << "delete reader " <<endl;
 	delete r;
 	reader_ = NULL;
 	return 0;
@@ -166,7 +165,7 @@ void MemList::ReadTest()
 	while(qk) {
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
 		//qk->data->Str();
-		cout << "\tblockid: "<<qk->data->Blockid();
+		cout << "\tblockid: "<<qk->data->Blockid()<<"\toffset: "<< qk->data->Offset();
 		cout<<endl;
 		qk = qk->next;
 	}

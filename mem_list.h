@@ -9,10 +9,12 @@ class QueueItem {
 	uint32_t length_;
 	uint32_t id_;
 	uint32_t bid_;
+	uint64_t blockOffset_;
 	FileId fid_;
 	char *str_;
 public:
-	QueueItem(string &record, uint32_t id, uint32_t bid, FileId fid):id_(id),bid_(bid),fid_(fid) {
+	QueueItem(string &record, uint32_t id, uint32_t bid, uint64_t blockOffset , FileId fid):
+		id_(id),bid_(bid),blockOffset_(blockOffset), fid_(fid) {
 		assert(record.size()!=0);
 		length_ = record.size();
 		str_ = (char *)malloc(record.size());
@@ -26,6 +28,9 @@ public:
 	}
 	uint32_t Blockid() {
 		return bid_;
+	}
+	uint64_t Offset() {
+		return blockOffset_;
 	}
 	FileId Fileid() {
 		return fid_;

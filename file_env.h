@@ -52,6 +52,7 @@ class FixFile
     FileId id;
     TimeId seq;
     uint32_t blockid;
+	uint32_t offset;
 	ItemNumber curpos;
     FileStatus status;
   }fileList;
@@ -64,7 +65,7 @@ public:
   bool LoadFile();
   //按照时间顺序读取未使用过的文件列表
   void GetUnUse(FILELIST &unuseFiles);
-  void SetItemNumber(FileId fid, uint32_t blockid, ItemNumber id);
+  void SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id);
   void ReleaseCurFile();
 private:
   int fd_;

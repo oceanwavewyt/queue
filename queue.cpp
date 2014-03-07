@@ -111,15 +111,17 @@ int main(int argc, char *args[])
 
 	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
-	//MemList::Instance()->ReadTest();	
+	MemList::Instance()->ReadTest();	
 
 	//read data
+	/*	
 	QueueItem *item = MemList::Instance()->Pop();	
-	
-	cout << "pop: "<< item->Id() << endl;	
-	
-	MemList::Instance()->Delete();
-	
+	if(item) {	
+		cout << "pop: "<< item->Id() << endl;	
+		
+		MemList::Instance()->Delete();
+	}
+	*/
 	/*********************/
 	if(argc>1) {
 		TestWrite();
