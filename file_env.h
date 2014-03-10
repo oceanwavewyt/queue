@@ -37,6 +37,7 @@ public:
 	MmapFile(const std::string& fname, int fd, size_t page_size);
   	~MmapFile();
   static size_t Roundup(size_t x, size_t y);
+  size_t GetAvail(size_t length);
   bool Append(const char *data, size_t length);
   bool Skip(uint64_t n); 
 private:

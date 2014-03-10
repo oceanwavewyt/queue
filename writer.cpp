@@ -31,14 +31,15 @@ bool Writer::AddRecord(const string &data, size_t length) {
 				assert(kHeaderSize == 11);                                          
 				dest_->Append("\x00\x00\x00\x00\x00\x00", leftover);        
 			}                                                                    
-			block_offset_ = 0;                                                   
+			block_offset_ = 0; 
+			Version::Instance()->SetBlockId();                                                  
 		}                                                                      
 
 		// Invariant: we never leave < kHeaderSize bytes in a block.           
 		assert(kBlockSize - block_offset_ - kHeaderSize >= 0);                 
 
 		const size_t avail = kBlockSize - block_offset_ - kHeaderSize;         
-		const size_t fragment_length = (left < avail) ? left : avail;          
+		const size_t fragment_length = (left < avail) ? left : avail;    
 
 		RecordType type;                                                       
 		const bool end = (left == fragment_length);                            
@@ -70,6 +71,7 @@ bool Writer::EmitPhysicalRecord(RecordType t, const char* ptr, size_t n) {
 	buf[4] = static_cast<char>(n & 0xff);                                       
 	buf[5] = static_cast<char>(n >> 8);                                         
 	buf[6] = static_cast<char>(t);
+
 	uint32_t bid = Version::Instance()->GetBlockId();                                              
 	buf[7] = static_cast<char>(bid & 0xff);
 	buf[8] = static_cast<char>(bid >> 8);
@@ -77,6 +79,9 @@ bool Writer::EmitPhysicalRecord(RecordType t, const char* ptr, size_t n) {
 	buf[9] = static_cast<char>(iid & 0xff);
 	buf[10] = static_cast<char>(iid >> 8);
 
+	if(t==kLastType){
+		cout << "write blockid: "<< bid << endl;
+	}
 	// Compute the crc of the record type and the payload.                      
 	//uint32_t crc = crc32c::Extend(type_crc_[t], ptr, n);                        
 	//crc = crc32c::Mask(crc);                 // Adjust for storage              

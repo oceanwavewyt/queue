@@ -103,7 +103,7 @@ int main(int argc, char *args[])
 
 	string filename;
 	fFile->GetCurrentFile(filename);
-	cout << "current file: " << filename << endl;
+	//cout << "current file: " << filename << endl;
 	
 	MemList::Instance()->SetFilelist(fFile);
 	MemList::Instance()->SetWriter(filename);
@@ -114,16 +114,17 @@ int main(int argc, char *args[])
 	MemList::Instance()->ReadTest();	
 
 	//read data
-	/*	
-	QueueItem *item = MemList::Instance()->Pop();	
-	if(item) {	
-		cout << "pop: "<< item->Id() << endl;	
-		
-		MemList::Instance()->Delete();
+	if(argc == 3) {	
+		cout << "pop data" << endl;
+		QueueItem *item = MemList::Instance()->Pop();	
+		if(item) {	
+			cout << "pop: "<< item->Id() << endl;	
+			
+			MemList::Instance()->Delete();
+		}
 	}
-	*/
 	/*********************/
-	if(argc>1) {
+	if(argc==2) {
 		TestWrite();
 	}	
 	//TestRead(f, filename);	

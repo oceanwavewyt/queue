@@ -38,7 +38,7 @@ void MemList::SetWriter(string &filename) {
 }
 
 void MemList::WriteRecord(const string &str, size_t length) {
-	cout << "blockid: "<< Version::Instance()->GetBlockId() << endl;	
+	//cout << "blockid: "<< Version::Instance()->GetBlockId() << endl;	
 	if(Version::Instance()->GetBlockId() >= fMaxBlockNum) {
 		filelist_->ReleaseCurFile();
 		string filename;
@@ -82,17 +82,22 @@ void MemList::Delete()
 
 uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 {
+	
 	FILELIST::iterator it;
 	int readOver = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
-		//cout <<"time: "<< it->first << "\tid: " << it->second.blockid << endl;
-		Version::Instance()->Init(1,1);
+		Version::Instance()->Init(0,0);
 		if(readOver == 0) {
-			uint64_t pos = kBlockSize*it->second.blockid + it->second.offset;
-			cout <<"readOver: "<<readOver << "  block_offset: "<< it->second.offset << endl;
+			size_t bid = it->second.blockid;
+			if(bid==0) {
+				bid = 1;
+			}
+			uint64_t pos = kBlockSize*(bid-1) + it->second.offset;
+			cout <<"readOver: "<<readOver <<" blockid: "<<it->second.blockid<< "  block_offset: "<< it->second.offset << endl;
 			readOver = LoadFile(it->second.id, pos);
 		}
 	}
+	cout << "=============start SetCurrWriterPos "<< endl;
 	SetCurrWriterPos(curFileid);
 	return 0;	
 }
@@ -119,6 +124,7 @@ int MemList::LoadFile(FileId fid, uint64_t p)
 	uint32_t id;
 	uint32_t blockid=0;
 	while((id = r->ReadRecord(record, scratch, blockid))!=0){
+		cout << "LoadFile blockid: " << blockid << endl;
 		if(!id) continue;
 		if(currentMem_ > mMaxBufferSize) return 1; 
 		uint64_t blockOffset = r->BlockEndOffset();
@@ -148,11 +154,14 @@ void MemList::SetCurrWriterPos(FileId curFileid)
 	uint32_t blockid;
 	while((id = reader.ReadRecord(record, scratch, blockid))!=0){
 		if(!id) continue;
+		cout << "writer pre blockid: "<< blockid << endl;
+		Version::Instance()->SetBlockId(blockid);
+		Version::Instance()->SetBlockInterId();
 	}
 	delete file;
 	uint64_t fileOffset = reader.FileEndOffset();
 	uint64_t blockOffset = reader.BlockEndOffset();	
-	cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
+	//cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
 	writer_->SetOffset(fileOffset, blockOffset);
 }
 

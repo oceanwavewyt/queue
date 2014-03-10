@@ -65,7 +65,7 @@ FileId FixFile::GetCurrentFileId() {
 }
 
 void FixFile::SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id) {
-	cout << "setItemNumber: "<<blockid << "\tid: "<< id << "\tfileid:"<<fid << endl;
+	//cout << "setItemNumber: "<<blockid << "\tid: "<< id << "\tfileid:"<<fid << endl;
 	uint32_t size = (fid-1)*sizeof(fileList);                
 	fileList *file = reinterpret_cast<fileList *>(base_+size);	
 	file->blockid = blockid;
@@ -89,7 +89,7 @@ void FixFile::GetUnUse(FILELIST &unuseFiles) {
         uint32_t size = i*sizeof(fileList);
 		fileList *file = reinterpret_cast<fileList *>(base_+size);
         if(file->id) {
-			cout << "file status: "<< file->status << " id: " << file->id << "  blockid: "<<file->blockid << " pos: "<<file->curpos << endl;
+			//cout << "file status: "<< file->status << " id: " << file->id << "  blockid: "<<file->blockid << " pos: "<<file->curpos << endl;
 		}
 		    //need delete file
         if(file->status == fUse) continue;
@@ -171,6 +171,10 @@ size_t MmapFile::Roundup(size_t x, size_t y) {
   	return ((x + y - 1) / y) * y;
  } 	
 
+size_t MmapFile::GetAvail(size_t length) {
+    return limit_ - dst_;
+}
+
 bool MmapFile::Append(const char *data, size_t length) {
     const char* src = data;
     size_t left = length;
@@ -232,7 +236,7 @@ bool MmapFile::MapNewRegion() {
     if (ptr == MAP_FAILED) {
       return false;
     }
-    Version::Instance()->SetBlockId();
+    //Version::Instance()->SetBlockId();
     base_ = reinterpret_cast<char*>(ptr);
     limit_ = base_ + map_size_;
     dst_ = base_;

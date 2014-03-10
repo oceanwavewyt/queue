@@ -26,6 +26,7 @@ bool Reader::SkipToInitialBlock() {
   offset_in_block_ = initial_offset_ % kBlockSize;
   uint64_t block_start_location = initial_offset_ - offset_in_block_;
 
+  cout << "block_start_location: "<< block_start_location/kBlockSize << endl;
   // Don't search a block if we'd be in the trailer
   if (offset_in_block_ > kBlockSize - 6) {
     offset_in_block_ = 0;
@@ -49,6 +50,7 @@ bool Reader::SkipToInitialBlock() {
 uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &blockid) {
   if (last_record_offset_ < initial_offset_) {
     if (!SkipToInitialBlock()) {
+      cout << "SkipToInitialBlock failed" << endl;
       return 0;
     }
   }
@@ -64,6 +66,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
 	uint64_t physical_record_offset = end_of_buffer_offset_ - buffer_.size();
 	uint32_t id;
     const unsigned int record_type = ReadPhysicalRecord(fragment, id, blockid);
+    //cout << "record_type: " << record_type << endl;
     switch (record_type) {
       case kFullType:
         if (in_fragmented_record) {
@@ -82,10 +85,11 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
         record = fragment;
         last_record_offset_ = prospective_record_offset;
         last_record_end_offset_ = kBlockSize - buffer_.size();
+        cout << "read blockid: " << blockid <<"\tlast_record_end_offset_:" <<last_record_end_offset_ << endl;
 		if(read_block_num_ != -1) {
 			real_read_block_num_ = read_block_num_;
 		}
-		Version::Instance()->SetBlockInterId();
+		//Version::Instance()->SetBlockInterId();
         //cout << "kFullType: " << last_record_end_offset_ << endl;
         return id;
 
@@ -124,10 +128,11 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
           record = scratch;
           last_record_offset_ = prospective_record_offset;
           last_record_end_offset_ = kBlockSize - buffer_.size();
+          cout << "read blockid: " << blockid<<"\tlast_record_end_offset_" <<last_record_end_offset_ << endl;
 		  if(read_block_num_ != -1) {
 			real_read_block_num_ = read_block_num_;
 		  }
-		  Version::Instance()->SetBlockInterId();	
+		  //Version::Instance()->SetBlockInterId();	
           return id;
         }
         break;
@@ -188,18 +193,15 @@ void Reader::ReportDrop(size_t bytes) {
 
 unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &blockid) {
   while (true) {
+    //cout << "buffer_.size: "<< buffer_.size() << endl;
     if (buffer_.size() < kHeaderSize) {
       if (!eof_) {
         // Last read was a full read, so this is a trailer to skip
         buffer_.clear();
         bool s = file_->Read(kBlockSize, buffer_, backing_store_);
         end_of_buffer_offset_ += buffer_.size();
-		if(offset_in_block_ > 0) {
-			buffer_ = buffer_.substr(offset_in_block_);
-			offset_in_block_ = 0;
-		}
-		read_block_num_++;
-		Version::Instance()->SetBlockId();
+		    read_block_num_++;
+		    //Version::Instance()->SetBlockId();
         if (!s) {
           buffer_.clear();
           ReportDrop(kBlockSize);
@@ -219,6 +221,10 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
       }
     }
 
+    if(offset_in_block_ > 0) {
+        buffer_ = buffer_.substr(offset_in_block_);
+        offset_in_block_ = 0;
+    }
     // Parse the header
     const char* header = buffer_.c_str();
     const uint32_t a = static_cast<uint32_t>(header[4]) & 0xff;
@@ -235,8 +241,8 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
     const uint32_t iid = e | (f << 8);
 
     id = iid | (bid << 16);
-	blockid = bid;
-	
+	  blockid = bid;
+	//cout << "bbbbbbbbid: " << bid  << "\tid: " << id << endl;
     if (kHeaderSize + length > buffer_.size()) {
       size_t drop_size = buffer_.size();
       buffer_.clear();
