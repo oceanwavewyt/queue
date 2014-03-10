@@ -32,7 +32,7 @@ void TestWrite() {
 	f.NewWritableFile(filename, &mfile);	
 	Writer* w = new Writer(mfile);
 	*/
-	/*
+	
 	string testData;
 	testData = "我是ddfdf你大爷qqqqq";
 	MemList::Instance()->WriteRecord(testData, testData.size());
@@ -42,13 +42,13 @@ void TestWrite() {
 	
 	char testData3[15] = "33333333333333";	
 	MemList::Instance()->WriteRecord(testData3, 15);
-	*/
 	
+	/*	
 	string dataFilename = "1.jpg";
 	string imgdata;
 	size_t len = readtest(dataFilename, imgdata);
 	MemList::Instance()->WriteRecord(imgdata, len);
-	
+	*/
 	/*
 	ofstream out2("../tmp/444.jpg",ios::binary);
 		out2<<imgdata;
@@ -112,7 +112,6 @@ int main(int argc, char *args[])
 	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
 	MemList::Instance()->ReadTest();	
-
 	//read data
 	if(argc == 3) {	
 		cout << "pop data" << endl;
@@ -125,6 +124,7 @@ int main(int argc, char *args[])
 	}
 	/*********************/
 	if(argc==2) {
+		cout << "start write "<< endl;
 		TestWrite();
 	}	
 	//TestRead(f, filename);	

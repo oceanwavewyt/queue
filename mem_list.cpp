@@ -82,7 +82,6 @@ void MemList::Delete()
 
 uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 {
-	
 	FILELIST::iterator it;
 	int readOver = 0;
 	for(it = flist.begin(); it!=flist.end(); it++) {
@@ -124,7 +123,6 @@ int MemList::LoadFile(FileId fid, uint64_t p)
 	uint32_t id;
 	uint32_t blockid=0;
 	while((id = r->ReadRecord(record, scratch, blockid))!=0){
-		cout << "LoadFile blockid: " << blockid << endl;
 		if(!id) continue;
 		if(currentMem_ > mMaxBufferSize) return 1; 
 		uint64_t blockOffset = r->BlockEndOffset();
@@ -154,7 +152,6 @@ void MemList::SetCurrWriterPos(FileId curFileid)
 	uint32_t blockid;
 	while((id = reader.ReadRecord(record, scratch, blockid))!=0){
 		if(!id) continue;
-		cout << "writer pre blockid: "<< blockid << endl;
 		Version::Instance()->SetBlockId(blockid);
 		Version::Instance()->SetBlockInterId();
 	}
@@ -173,7 +170,7 @@ void MemList::ReadTest()
 	qk = head_;	
 	while(qk) {
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
-		//qk->data->Str();
+		qk->data->Str();
 		cout << "\tblockid: "<<qk->data->Blockid()<<"\toffset: "<< qk->data->Offset();
 		cout<<endl;
 		qk = qk->next;

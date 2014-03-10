@@ -26,7 +26,6 @@ bool Reader::SkipToInitialBlock() {
   offset_in_block_ = initial_offset_ % kBlockSize;
   uint64_t block_start_location = initial_offset_ - offset_in_block_;
 
-  cout << "block_start_location: "<< block_start_location/kBlockSize << endl;
   // Don't search a block if we'd be in the trailer
   if (offset_in_block_ > kBlockSize - 6) {
     offset_in_block_ = 0;
@@ -48,12 +47,11 @@ bool Reader::SkipToInitialBlock() {
 }
 
 uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &blockid) {
-  if (last_record_offset_ < initial_offset_) {
-    if (!SkipToInitialBlock()) {
+  if (!SkipToInitialBlock()) {
       cout << "SkipToInitialBlock failed" << endl;
       return 0;
-    }
   }
+  initial_offset_ = 0;
   scratch.clear();
   record.clear();
   bool in_fragmented_record = false;
@@ -85,7 +83,6 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
         record = fragment;
         last_record_offset_ = prospective_record_offset;
         last_record_end_offset_ = kBlockSize - buffer_.size();
-        cout << "read blockid: " << blockid <<"\tlast_record_end_offset_:" <<last_record_end_offset_ << endl;
 		if(read_block_num_ != -1) {
 			real_read_block_num_ = read_block_num_;
 		}
@@ -128,7 +125,6 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
           record = scratch;
           last_record_offset_ = prospective_record_offset;
           last_record_end_offset_ = kBlockSize - buffer_.size();
-          cout << "read blockid: " << blockid<<"\tlast_record_end_offset_" <<last_record_end_offset_ << endl;
 		  if(read_block_num_ != -1) {
 			real_read_block_num_ = read_block_num_;
 		  }
