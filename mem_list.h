@@ -11,14 +11,16 @@ class QueueItem {
 	uint32_t bid_;
 	uint64_t blockOffset_;
 	FileId fid_;
-	char *str_;
+	string str_;
 public:
 	QueueItem(string &record, uint32_t id, uint32_t bid, uint64_t blockOffset , FileId fid):
 		id_(id),bid_(bid),blockOffset_(blockOffset), fid_(fid) {
 		assert(record.size()!=0);
 		length_ = record.size();
-		str_ = (char *)malloc(record.size());
-		memcpy(str_, record.data(), record.size());
+		//str_ = (char *)malloc(length_+1);
+		//memset(str_,0,length_);
+		//memcpy(str_, record.data(), length_);
+		str_.assign(record.data(), length_);
 	}
 	uint32_t Size() {
 		return length_;
@@ -35,11 +37,12 @@ public:
 	FileId Fileid() {
 		return fid_;
 	}
-	void Str() {
-		cout << str_ << endl;
+	void Str(string &str) {
+		//cout << str_ << endl;
+		str.assign(str_.data(), length_);
 	}
 	~QueueItem() {
-		if(str_) free(str_);
+		//if(str_) free(str_);
 	}	
 };
 

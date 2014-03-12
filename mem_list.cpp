@@ -92,11 +92,11 @@ uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 				bid = 1;
 			}
 			uint64_t pos = kBlockSize*(bid-1) + it->second.offset;
-			cout <<"readOver: "<<readOver <<" blockid: "<<it->second.blockid<< "  block_offset: "<< it->second.offset << endl;
+			//cout <<"readOver: "<<readOver <<" blockid: "<<it->second.blockid<< "  block_offset: "<< it->second.offset << endl;
 			readOver = LoadFile(it->second.id, pos);
 		}
 	}
-	cout << "=============start SetCurrWriterPos "<< endl;
+	//cout << "=============start SetCurrWriterPos "<< endl;
 	SetCurrWriterPos(curFileid);
 	return 0;	
 }
@@ -170,7 +170,7 @@ void MemList::ReadTest()
 	qk = head_;	
 	while(qk) {
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
-		qk->data->Str();
+		//qk->data->Str();
 		cout << "\tblockid: "<<qk->data->Blockid()<<"\toffset: "<< qk->data->Offset();
 		cout<<endl;
 		qk = qk->next;
