@@ -13,9 +13,9 @@ class QueueItem {
 	FileId fid_;
 	string str_;
 public:
-	QueueItem(string &record, uint32_t id, uint32_t bid, uint64_t blockOffset , FileId fid):
+	QueueItem(const string &record, uint32_t id, uint32_t bid, uint64_t blockOffset , FileId fid):
 		id_(id),bid_(bid),blockOffset_(blockOffset), fid_(fid) {
-		assert(record.size()!=0);
+		//assert(record.size()!=0);
 		length_ = record.size();
 		//str_ = (char *)malloc(length_+1);
 		//memset(str_,0,length_);
@@ -80,7 +80,9 @@ public:
 
 	void ReadTest(); 
 private:
-	int LoadFile(FileId id, uint64_t pos);
+	int LoadFile(FileId id, uint64_t pos, FileId curFile);
+	void HoldLoad(FILELIST &list, FileId curFileid);
+	void ContLoad();
 	Reader *GetCurrentReader(FileId fid, uint64_t pos=0);
 	void SetCurrWriterPos(FileId curFileid); 
 private:
@@ -90,5 +92,6 @@ private:
 	Writer *writer_;
 	Reader *reader_;
 	uint64_t currentMem_;
+	FileId currentReadFid_;
 };
 #endif

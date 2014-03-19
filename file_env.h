@@ -68,6 +68,7 @@ public:
   void GetUnUse(FILELIST &unuseFiles);
   void SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id);
   void ReleaseCurFile();
+  void SetUse(FileId fid);
 private:
   int fd_;
   std::string fname_;

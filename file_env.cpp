@@ -82,6 +82,14 @@ void FixFile::ReleaseCurFile() {
 	curFileid = 0;
 }
 
+//set status from fUnUse to fUse
+void FixFile::SetUse(FileId fid) {
+	uint32_t s = (fid-1)*sizeof(fileList);
+	fileList *file = reinterpret_cast<fileList *>(base_+s);
+	file->status = fUse;
+}
+
+
 void FixFile::GetUnUse(FILELIST &unuseFiles) {
     fileList *curfile=0;
     //cout << "fNum: " << fNum<< endl;
