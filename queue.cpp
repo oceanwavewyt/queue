@@ -38,20 +38,21 @@ void TestWrite() {
 	cout << "write length:" << testData.size() <<endl;
 	MemList::Instance()->WriteRecord(testData, testData.size());
 	*/
-	/*	
-	char testData2[10] = "123456789";	
-	MemList::Instance()->WriteRecord(testData2, 10);
-	
+	for(int j=0;j<140;j++) {	
+		char testData2[100]={0};
+		sprintf(testData2, "%d_共产主义好，生活幸福美满",j);	
+		MemList::Instance()->WriteRecord(testData2, strlen(testData2));
+	}
+	/*
 	char testData3[15] = "33333333333333";	
 	MemList::Instance()->WriteRecord(testData3, 15);
-	*/
 		
 	string dataFilename = "1.jpg";
 	string imgdata;
 	size_t len = readtest(dataFilename, imgdata);
 	MemList::Instance()->WriteRecord(imgdata, len);
 	
-	/*
+	
 	ofstream out2("../tmp/444.jpg",ios::binary);
 		out2<<imgdata;
 		out2.close();
@@ -113,21 +114,27 @@ int main(int argc, char *args[])
 
 	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
 	
-	//MemList::Instance()->ReadTest();
+	MemList::Instance()->ReadTest();
 	//read data
 	if(argc <2) return 1;
 	
 	if(strcmp(args[1],"read")==0) {
-		cout << "pop data" << endl;
-		QueueItem *item = MemList::Instance()->Pop();	
-		if(item) {	
-			cout << "pop: "<< item->Id() << "\tlength:"<< item->Size() << endl;	
-			//item->Str();	
-			ofstream file("write.jpg", ios::out|ios::binary|ios::ate);
-			string cont;
-			item->Str(cont);
-			file << cont;
-			MemList::Instance()->Delete();
+		int i = 0;
+		while(i<1) {
+			cout << "pop data" << endl;
+			QueueItem *item = MemList::Instance()->Pop();	
+			if(item) {	
+				cout << "pop: "<< item->Id() << "\tlength:"<< item->Size() <<"\t";	
+				string cont;
+				item->Str(cont);
+				cout << cont << endl;
+				/**
+				ofstream file("testout/write.jpg", ios::out|ios::binary|ios::ate);
+				file << cont;
+				*/
+				MemList::Instance()->Delete();
+			}
+			i++;
 		}
 	}
 	/*********************/

@@ -60,6 +60,7 @@ uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &bloc
   uint64_t prospective_record_offset = 0;
 
   string fragment;
+  fragment.clear();
   while (true) {
 	uint64_t physical_record_offset = end_of_buffer_offset_ - buffer_.size();
 	uint32_t id;

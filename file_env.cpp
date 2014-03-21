@@ -75,7 +75,8 @@ void FixFile::SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, 
 
 void FixFile::ReleaseCurFile() {
 	if(curFileid == 0) return;
- 	assert(curFileid<=fNum);
+ 	cout << "curFileid:" << curFileid <<"\tfNum:"<<fNum<<endl;
+	assert(curFileid<=fNum);
 	uint32_t s = (curFileid-1)*sizeof(fileList);
 	fileList *file = reinterpret_cast<fileList *>(base_+s);
 	file->status = fUnUse;  				

@@ -40,11 +40,14 @@ void MemList::SetWriter(string &filename) {
 void MemList::WriteRecord(const string &str, size_t length) {
 	//cout << "blockid: "<< Version::Instance()->GetBlockId() << endl;	
 	if(Version::Instance()->GetBlockId() >= fMaxBlockNum) {
+		cout << "start release..................." << endl; 
 		filelist_->ReleaseCurFile();
+		Version::Instance()->Init(0,0);
 		string filename;
 		filelist_->GetCurrentFile(filename);
 		SetWriter(filename);	
 	}
+	cout << "write: "<< str << endl;
 	writer_->AddRecord(str, length);
 }
 
@@ -212,8 +215,10 @@ void MemList::ReadTest()
 	QueueLink *qk;
 	qk = head_;	
 	while(qk) {
+		string str;
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
-		//qk->data->Str();
+		qk->data->Str(str);
+		cout <<str;
 		cout << "\tblockid: "<<qk->data->Blockid()<<"\toffset: "<< qk->data->Offset();
 		cout<<endl;
 		qk = qk->next;

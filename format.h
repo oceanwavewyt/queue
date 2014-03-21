@@ -59,7 +59,7 @@ static const int fNum = 100;
 static const uint32_t fMaxBlockNum = 10; //65535;
 
 //memory buffer size
-static const uint64_t mMaxBufferSize = 1024*1024*10; //10M
+static const uint64_t mMaxBufferSize = 1024*1024*1; //10M
 
 typedef uint16_t FileId;
 typedef uint32_t ItemNumber;
