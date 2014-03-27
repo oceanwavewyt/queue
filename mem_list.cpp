@@ -214,6 +214,7 @@ void MemList::ReadTest()
 {
 	QueueLink *qk;
 	qk = head_;	
+	int i=0;
 	while(qk) {
 		string str;
 		cout << "id: "<< qk->data->Id() <<"\tlength: " << qk->data->Size() << "\tfileid: "<< qk->data->Fileid();
@@ -222,6 +223,8 @@ void MemList::ReadTest()
 		cout << "\tblockid: "<<qk->data->Blockid()<<"\toffset: "<< qk->data->Offset();
 		cout<<endl;
 		qk = qk->next;
+		//if(i==10)break;
+		i++;
 	}
 }
 

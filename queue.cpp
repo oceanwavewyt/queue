@@ -41,6 +41,7 @@ void TestWrite() {
 	for(int j=0;j<140;j++) {	
 		char testData2[100]={0};
 		sprintf(testData2, "%d_共产主义好，生活幸福美满",j);	
+		//sprintf(testData2, "%d_abcde,efghijk",j);
 		MemList::Instance()->WriteRecord(testData2, strlen(testData2));
 	}
 	/*
@@ -120,7 +121,7 @@ int main(int argc, char *args[])
 	
 	if(strcmp(args[1],"read")==0) {
 		int i = 0;
-		while(i<1) {
+		while(i<2) {
 			cout << "pop data" << endl;
 			QueueItem *item = MemList::Instance()->Pop();	
 			if(item) {	

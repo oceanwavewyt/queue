@@ -223,7 +223,7 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
         offset_in_block_ = 0;
     }
     // Parse the header
-    const char* header = buffer_.c_str();
+    const char* header = buffer_.data();
     const uint32_t a = static_cast<uint32_t>(header[4]) & 0xff;
     const uint32_t b = static_cast<uint32_t>(header[5]) & 0xff;
     const unsigned int type = header[6];
@@ -255,7 +255,6 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
       return kBadRecord;
     }
 
-	buffer_ = buffer_.substr(kHeaderSize + length);	
 
     //buffer_.remove_prefix(kHeaderSize + length);
 
@@ -267,6 +266,8 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
     }
 
 	result.assign(header + kHeaderSize, length);
+	
+	buffer_ = buffer_.substr(kHeaderSize + length);	
     return type;
   }
 }
