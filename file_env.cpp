@@ -56,6 +56,12 @@ FileId FixFile::GetCurrentFileId() {
 	uint32_t size = firstUse*sizeof(fileList);
 	fileList *file = reinterpret_cast<fileList *>(base_+size);
 	file->id = firstUse+1;
+	//if file exists and delete file
+	string filename;
+	QueueFileName::List(file->id, filename);
+	if(access(filename.c_str(), F_OK)>=0) {
+		assert(remove(filename.c_str())==0);	
+	}		
     file->seq = TimeId(time(NULL));
     file->blockid = 0;
 	file->offset = 0;

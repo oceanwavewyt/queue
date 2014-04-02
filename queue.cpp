@@ -121,7 +121,7 @@ int main(int argc, char *args[])
 	
 	if(strcmp(args[1],"read")==0) {
 		int i = 0;
-		while(i<2) {
+		while(i<10) {
 			cout << "pop data" << endl;
 			QueueItem *item = MemList::Instance()->Pop();	
 			if(item) {	
