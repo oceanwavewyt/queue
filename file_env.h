@@ -72,6 +72,7 @@ public:
 private:
   int fd_;
   std::string fname_;
+  std::string basePath_;
   char *base_;
   int startid_;
   FileId curFileid;

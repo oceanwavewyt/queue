@@ -9,7 +9,7 @@ class Bridge : public Queue
 public:
 	Bridge(){}
 	~Bridge(){}
-	bool Load(string &path, string &name);
+	bool Load(const string &path, const string &name);
 	
 	virtual bool Read(std::string &str);
 	virtual bool Write(char *str, uint64_t length);
@@ -18,7 +18,7 @@ public:
 };
 
 
-bool Queue::Open(string &path, string &name, Queue **que) {
+bool Queue::Open(const string &path, const string &name, Queue **que) {
 	Bridge *bge = new Bridge();
  	if(!bge->Load(path, name)) {
 		delete bge;

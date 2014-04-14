@@ -150,9 +150,11 @@ Reader *MemList::GetCurrentReader(FileId fid, uint64_t pos)
 	if(reader_) return reader_;
 	string filename;
 	QueueFileName::List(fid, filename);
+	//filename = Opt::GetBasePath() + filename;
 	Files f;
 	SequentialFile* file;
 	if(!f.NewSequentialFile(filename, &file)) {
+		cout << "new read null "<< endl;
 	  	return NULL;		
 	}
 	reader_ = new Reader(file,false,pos);
@@ -185,6 +187,7 @@ void MemList::SetCurrWriterPos(FileId curFileid)
 {
 	string filename;
 	QueueFileName::List(curFileid, filename);
+	//filename = Opt::GetBasePath() + filename;
 	Files f;
 	SequentialFile* file;
   	if(!f.NewSequentialFile(filename, &file)) {

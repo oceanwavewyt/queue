@@ -10,7 +10,6 @@ FixFile::FixFile(const std::string &fname, int fd):fd_(fd),
 bool FixFile::LoadFile(){
     struct stat s;
     stat(fname_.c_str(), &s);
-    cout << fname_ << s.st_size << endl;
 	if(s.st_size  <= 0){
       if (ftruncate(fd_, sizeof(fileList)*fNum) < 0) {
         return false;
@@ -35,6 +34,7 @@ int FixFile::GetCurrentFile(std::string &filename) {
 	  curFileid = GetCurrentFileId();
   }
   QueueFileName::List(curFileid, filename);
+  //filename = Opt::GetBasePath() + "/" + filename;
   return 0;
 }
 
@@ -59,6 +59,7 @@ FileId FixFile::GetCurrentFileId() {
 	//if file exists and delete file
 	string filename;
 	QueueFileName::List(file->id, filename);
+	//filename = Opt::GetBasePath() + "/" + filename;
 	if(access(filename.c_str(), F_OK)>=0) {
 		assert(remove(filename.c_str())==0);	
 	}		
@@ -78,6 +79,7 @@ void FixFile::SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, 
 	file->offset = blockOffset;	
 	file->curpos = id;
 }
+
 
 void FixFile::ReleaseCurFile() {
 	if(curFileid == 0) return;

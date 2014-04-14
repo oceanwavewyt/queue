@@ -8,7 +8,7 @@
 class Queue
 {
 public:
-	static bool Open(std::string &path, std::string &name, Queue **que);
+	static bool Open(const std::string &path, const std::string &name, Queue **que);
 	
 	Queue(){
 	}

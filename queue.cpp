@@ -3,7 +3,7 @@
 #include "reader.h"
 #include "writer.h"
 #include "mem_list.h"
-
+#include "include/queue.h"
 #include <iostream>
 #include <fstream>
 
@@ -86,8 +86,24 @@ void TestRead(Files &f, const string &filename) {
 	}
 }
 
+int main(int argc, char *args[])
+{
+	Queue *db;
+	Queue::Open("/root","abc", &db);
+	/*
+	char testData2[100]={0};                            
+	sprintf(testData2, "%d_共产主义好，生活幸福美满",133);
+	db->Write(testData2, strlen(testData2));
+	*/
+	string data;
+	if(db->Read(data)) {
+		cout << "read: " << data << endl;
+	}
+	
+	return 1;
+}
 
-int main(int argc, char *args[]) 
+int main23333333(int argc, char *args[]) 
 {
 	Files f;
 	

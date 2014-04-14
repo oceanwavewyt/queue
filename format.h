@@ -80,14 +80,32 @@ typedef struct filepos{
 }filePos;
 typedef std::map<TimeId, filePos> FILELIST; 
 
+class Opt
+{
+	static std::string path_;
+	static std::string name_;	
+public:	
+	static void Set(const std::string &path, const std::string &name) {
+		path_ = path;
+		name_ = name;
+	} 
+	static std::string GetBasePath() {
+		return  path_ + "/" + name_;
+	}	
+};
+
+
 class QueueFileName
 {
 public:
 	static void List(FileId id, std::string &filename) {
 		char buf[50] = {0};
-		sprintf(buf,"./data/queue_%04d.lst", id);
-		filename = buf;
+		sprintf(buf,"queue_%04d.lst", id);
+		filename = Opt::GetBasePath() +"/" + buf;
 	}  	
+	static void Head(std::string &filename) {
+		filename = Opt::GetBasePath()+"/headpage.hst";
+	}
 
 };
 
