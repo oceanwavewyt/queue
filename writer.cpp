@@ -3,9 +3,14 @@
 #include "reader.h"
 #include "writer.h"
 #include "version.h"
+#include "util/crc32c.h"
+#include "util/coding.h"
 
 Writer::Writer(MmapFile *dest): dest_(dest),block_offset_(0){
-		
+	for (int i = 0; i <= kMaxRecordType; i++) {
+   		 char t = static_cast<char>(i);
+    	type_crc_[i] = crc32c::Value(&t, 1);
+  }		
 }
 Writer::~Writer() {
 	delete dest_;
@@ -83,9 +88,10 @@ bool Writer::EmitPhysicalRecord(RecordType t, const char* ptr, size_t n) {
 		cout << "write blockid: "<< bid << endl;
 	}
 	// Compute the crc of the record type and the payload.                      
-	//uint32_t crc = crc32c::Extend(type_crc_[t], ptr, n);                        
-	//crc = crc32c::Mask(crc);                 // Adjust for storage              
-	//EncodeFixed32(buf, crc);                                                    
+	uint32_t crc = crc32c::Extend(0, ptr, n);                        
+	crc = crc32c::Mask(crc);                 // Adjust for storage              
+	cout << "write crc: "<< crc << endl;
+	EncodeFixed32(buf, crc);                                                    
 
 	// Write the header and the payload                                       
 	bool s = dest_->Append(buf, kHeaderSize);                          

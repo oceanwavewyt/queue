@@ -1,6 +1,8 @@
 #include "reader.h"
 #include "file_env.h"
 #include "version.h"
+#include "util/crc32c.h"
+#include "util/coding.h"
 
 Reader::Reader(SequentialFile* file, bool checksum,
                uint64_t initial_offset)
@@ -255,7 +257,14 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
       return kBadRecord;
     }
 
-
+	uint32_t expected_crc = crc32c::Unmask(DecodeFixed32(header)); 
+	uint32_t actual_crc = crc32c::Value(header + 11, length);   
+	cout << "expected_crc: " << expected_crc <<endl;
+	cout << "actual_crc: " << actual_crc <<endl;
+	if (actual_crc != expected_crc) {    
+		cout << "crc32 failed " << endl;                          	
+		return kBadRecord;
+	}	
     //buffer_.remove_prefix(kHeaderSize + length);
 
     // Skip physical record that started before initial_offset_

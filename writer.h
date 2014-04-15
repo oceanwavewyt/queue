@@ -8,6 +8,7 @@ class Writer
 {
 	MmapFile *dest_;
 	int block_offset_;
+	uint32_t type_crc_[kMaxRecordType + 1];
 public:
 	Writer(MmapFile *dest);
 	~Writer();

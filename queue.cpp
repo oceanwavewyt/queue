@@ -90,11 +90,11 @@ int main(int argc, char *args[])
 {
 	Queue *db;
 	Queue::Open("/root","abc", &db);
-	/*
+	
 	char testData2[100]={0};                            
 	sprintf(testData2, "%d_共产主义好，生活幸福美满",133);
 	db->Write(testData2, strlen(testData2));
-	*/
+	
 	string data;
 	if(db->Read(data)) {
 		cout << "read: " << data << endl;
