@@ -241,7 +241,6 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
 
     id = iid | (bid << 16);
 	  blockid = bid;
-	//cout << "bbbbbbbbid: " << bid  << "\tid: " << id << endl;
     if (kHeaderSize + length > buffer_.size()) {
       size_t drop_size = buffer_.size();
       buffer_.clear();
@@ -259,8 +258,6 @@ unsigned int Reader::ReadPhysicalRecord(string &result, uint32_t &id, uint32_t &
 
 	uint32_t expected_crc = crc32c::Unmask(DecodeFixed32(header)); 
 	uint32_t actual_crc = crc32c::Value(header + 11, length);   
-	cout << "expected_crc: " << expected_crc <<endl;
-	cout << "actual_crc: " << actual_crc <<endl;
 	if (actual_crc != expected_crc) {    
 		cout << "crc32 failed " << endl;                          	
 		return kBadRecord;

@@ -90,17 +90,12 @@ bool Writer::EmitPhysicalRecord(RecordType t, const char* ptr, size_t n) {
 	// Compute the crc of the record type and the payload.                      
 	uint32_t crc = crc32c::Extend(0, ptr, n);                        
 	crc = crc32c::Mask(crc);                 // Adjust for storage              
-	cout << "write crc: "<< crc << endl;
 	EncodeFixed32(buf, crc);                                                    
 
 	// Write the header and the payload                                       
 	bool s = dest_->Append(buf, kHeaderSize);                          
 	if (s) {
-		//string str2(ptr,n);                                                               
 		s = dest_->Append(ptr, n);                                         
-		//if (s) {                                                             
-		//	s = dest_->Flush();                                                     
-		//}                                                                         
 	}                                                                           
 	block_offset_ += kHeaderSize + n;                                          
 	return s;                                                                   

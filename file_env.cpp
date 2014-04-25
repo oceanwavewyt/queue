@@ -72,7 +72,7 @@ FileId FixFile::GetCurrentFileId() {
 }
 
 void FixFile::SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id) {
-	//cout << "setItemNumber: "<<blockid << "\tid: "<< id << "\tfileid:"<<fid << endl;
+	if(fid <=0) return;
 	uint32_t size = (fid-1)*sizeof(fileList);                
 	fileList *file = reinterpret_cast<fileList *>(base_+size);	
 	file->blockid = blockid;
@@ -92,10 +92,12 @@ void FixFile::ReleaseCurFile() {
 }
 
 //set status from fUnUse to fUse
-void FixFile::SetUse(FileId fid) {
+bool FixFile::SetUse(FileId fid) {
+	if(fid <=0) return false;
 	uint32_t s = (fid-1)*sizeof(fileList);
 	fileList *file = reinterpret_cast<fileList *>(base_+s);
 	file->status = fUse;
+	return true;
 }
 
 

@@ -89,10 +89,10 @@ void TestRead(Files &f, const string &filename) {
 int main(int argc, char *args[])
 {
 	Queue *db;
-	Queue::Open("/root","abc", &db);
+	Queue::Open("/tmp","abc", &db);
 	
 	char testData2[100]={0};                            
-	sprintf(testData2, "%d_共产主义好，生活幸福美满",133);
+	sprintf(testData2, "%d_共产主义好，生活幸福美满",555);
 	db->Write(testData2, strlen(testData2));
 	
 	string data;

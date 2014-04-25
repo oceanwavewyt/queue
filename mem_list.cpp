@@ -73,8 +73,9 @@ QueueItem *MemList::Pop()
 	if(head_ == NULL) return NULL;
 	//File read over and set file status is fUse
 	if(head_->data->Id() == 0) {
-		filelist_->SetUse(head_->data->Fileid());	
-		Delete();
+		if(filelist_->SetUse(head_->data->Fileid())) {	
+			Delete();
+		}
 	}
 	if(head_ == NULL) ContLoad();
 	if(head_ == NULL) return NULL;
