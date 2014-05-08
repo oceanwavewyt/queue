@@ -31,6 +31,11 @@ all: $(OUTPUTNAME)
 clean:
 	-rm -f $(OUTPUTNAME) $(objects)
 
+install:
+	cp $(OUTPUTNAME) /lib/
+	cp $(OUTPUTNAME) /lib64/
+	cp include/queue.h /usr/include/
+
 $(OUTPUTNAME):$(objects)
 	$(CC) $(LDFLAGS) $(objects) -o $(OUTPUTNAME) 
 
