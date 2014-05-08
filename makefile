@@ -1,7 +1,7 @@
 CC:=g++
 CXX:=g++
 DEBUG=DEBUG
-OUTPUTNAME:=bqueue
+OUTPUTNAME:=libqueue.so
 OUTPATH=output
 INCLUDES += -I/usr/include/ -I./include/
 
@@ -9,7 +9,8 @@ $(shell CC=$(CC) CXX=$(CXX) TARGET_OS=$(TARGET_OS) \
     ./build_detect_platform build_config.mk ./)
 include build_config.mk
 
-LDFLAGS += -lpthread
+LDFLAGS +=-shared -Wl,-soname -Wl,$(OUTPUTNAME)  -lpthread -ltcmalloc
+ 
 CPPFLAGS += -g -fPIC -pg -Wall
 OS := $(shell uname -s)
 IS_DARWIN := $(shell echo $(OS)|grep -i Darwin)
@@ -31,5 +32,5 @@ clean:
 	-rm -f $(OUTPUTNAME) $(objects)
 
 $(OUTPUTNAME):$(objects)
-	$(CC) -o $(OUTPUTNAME) $(objects) $(LDFLAGS) -rdynamic
+	$(CC) $(LDFLAGS) $(objects) -o $(OUTPUTNAME) 
 

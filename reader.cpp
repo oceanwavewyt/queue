@@ -50,7 +50,6 @@ bool Reader::SkipToInitialBlock() {
 
 uint32_t Reader::ReadRecord(string &record, std::string &scratch, uint32_t &blockid) {
   if (!SkipToInitialBlock()) {
-      cout << "SkipToInitialBlock failed" << endl;
       return 0;
   }
   initial_offset_ = 0;
@@ -180,7 +179,7 @@ uint64_t Reader::BlockEndOffset() {
 
 
 void Reader::ReportCorruption(size_t bytes, const char* reason) {
-  //ReportDrop(bytes, Status::Corruption(reason));
+  cout << reason << " bytes:"<<bytes <<endl;
 }
 
 void Reader::ReportDrop(size_t bytes) {

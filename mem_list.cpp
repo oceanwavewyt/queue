@@ -15,6 +15,8 @@ MemList *MemList::Instance()
 
 MemList::MemList():head_(NULL),tail_(NULL),currentMem_(0),currentReadFid_(0) {
 	length_ = 0;
+	writer_ = NULL;
+	reader_ = NULL;
 }
 
 MemList::~MemList(){

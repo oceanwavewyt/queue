@@ -26,18 +26,6 @@ size_t readtest(string &filename, string &r) {
 }
 
 void TestWrite() {
-	/*
-	MmapFile *mfile;
-
-	f.NewWritableFile(filename, &mfile);	
-	Writer* w = new Writer(mfile);
-	*/
-	/*	
-	string testData;
-	testData = "我是ddfdf你大爷qqqqq";
-	cout << "write length:" << testData.size() <<endl;
-	MemList::Instance()->WriteRecord(testData, testData.size());
-	*/
 	for(int j=0;j<140;j++) {	
 		char testData2[100]={0};
 		sprintf(testData2, "%d_共产主义好，生活幸福美满",j);	
@@ -103,65 +91,4 @@ int main(int argc, char *args[])
 	return 1;
 }
 
-int main23333333(int argc, char *args[]) 
-{
-	Files f;
-	
-	//TestRead(f, "./data/queue_0001.lst");
-	//return 1;
-	/*********************/
-	FixFile *fFile;
-	f.NewFixFile("./data/filelist.dat", &fFile);
-	//
-	if(fFile->LoadFile() == false) {
-		cout << "filelist load failed." << endl;
-		exit(1);
-	}
-	//load to memory
-	FILELIST fileMapList;
-	fFile->GetUnUse(fileMapList);
 
-	string filename;
-	fFile->GetCurrentFile(filename);
-	//cout << "current file: " << filename << endl;
-	
-	MemList::Instance()->SetFilelist(fFile);
-	MemList::Instance()->SetWriter(filename);
-
-
-	MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
-	
-	MemList::Instance()->ReadTest();
-	//read data
-	if(argc <2) return 1;
-	
-	if(strcmp(args[1],"read")==0) {
-		int i = 0;
-		while(i<10) {
-			cout << "pop data" << endl;
-			QueueItem *item = MemList::Instance()->Pop();	
-			if(item) {	
-				cout << "pop: "<< item->Id() << "\tlength:"<< item->Size() <<"\t";	
-				string cont;
-				item->Str(cont);
-				cout << cont << endl;
-				/**
-				ofstream file("testout/write.jpg", ios::out|ios::binary|ios::ate);
-				file << cont;
-				*/
-				MemList::Instance()->Delete();
-			}
-			i++;
-		}
-	}
-	/*********************/
-	if(strcmp(args[1], "write")==0) {
-		//cout << "start write "<< endl;
-		TestWrite();
-	}	
-	//TestRead(f, filename);	
-	//MemList::Instance()->Load(fileMapList,fFile->GetCurrentFileId());
-	
-	//MemList::Instance()->ReadTest();	
-	return 1;
-}

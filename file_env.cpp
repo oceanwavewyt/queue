@@ -204,6 +204,7 @@ bool MmapFile::Append(const char *data, size_t length) {
       if (avail == 0) {
         if (!UnmapCurrentRegion() ||
             !MapNewRegion()) {
+		  cout << "New region failed." << endl;
           return false;
         }
       }
