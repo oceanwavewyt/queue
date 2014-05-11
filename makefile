@@ -1,15 +1,16 @@
-CC:=g++
-CXX:=g++
-DEBUG=DEBUG
-OUTPUTNAME:=libqueue.so
-OUTPATH=output
-INCLUDES += -I/usr/include/ -I./include/
-
 $(shell CC=$(CC) CXX=$(CXX) TARGET_OS=$(TARGET_OS) \
     ./build_detect_platform build_config.mk ./)
 include build_config.mk
+CC:=g++
+CXX:=g++
+DEBUG=DEBUG
+OUTPUTNAME:=libqueue.$(PLATFORM_SHARED_EXT)
+OUTPATH=output
+INCLUDES += -I/usr/include/ -I./include/
 
-LDFLAGS +=-shared -Wl,-soname -Wl,$(OUTPUTNAME)  -lpthread -ltcmalloc
+
+
+LDFLAGS +=$(PLATFORM_SHARED_LDFLAGS)$(OUTPUTNAME)  -lpthread
  
 CPPFLAGS += -g -fPIC -pg -Wall
 OS := $(shell uname -s)

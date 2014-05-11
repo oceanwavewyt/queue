@@ -18,11 +18,6 @@
 #   PLATFORM_SHARED_VERSIONED   Set to 'true' if platform supports versioned
 #                               shared libraries, empty otherwise.
 #
-# The PLATFORM_CCFLAGS and PLATFORM_CXXFLAGS might include the following:
-#
-#       -DLEVELDB_CSTDATOMIC_PRESENT if <cstdatomic> is present
-#       -DLEVELDB_PLATFORM_POSIX     for Posix-based platforms
-#       -DSNAPPY                     if the Snappy library is present
 #
 
 OUTPUT=$1
