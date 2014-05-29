@@ -5,7 +5,6 @@
 #include <string.h>
 #include <string>
 
-
 // Standard Put... routines append to a string
 extern void PutFixed32(std::string* dst, uint32_t value);
 extern void PutFixed64(std::string* dst, uint64_t value);
@@ -82,6 +81,5 @@ inline const char* GetVarint32Ptr(const char* p,
   }
   return GetVarint32PtrFallback(p, limit, value);
 }
-
 
 #endif  // STORAGE_LEVELDB_UTIL_CODING_H_

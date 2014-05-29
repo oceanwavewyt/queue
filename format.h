@@ -29,85 +29,85 @@
 
 using namespace std;
 
-enum RecordType {
-	// Zero is reserved for preallocated files
-	kZeroType = 0,
-	kFullType = 1,
-	// For fragments
-	kFirstType = 2,
-	kMiddleType = 3,
-	kLastType = 4
-};
+namespace pile {
+	enum RecordType {
+		// Zero is reserved for preallocated files
+		kZeroType = 0,
+		kFullType = 1,
+		// For fragments
+		kFirstType = 2,
+		kMiddleType = 3,
+		kLastType = 4
+	};
 
-static const int kMaxRecordType = kLastType;
+	static const int kMaxRecordType = kLastType;
 
-static const uint32_t kBlockSize = 32768;
+	static const uint32_t kBlockSize = 32768;
 
-// Header is checksum (4 bytes), type (1 byte), length (2 bytes), itemid(4 bytes).
-static const uint8_t kHeaderSize = 4 + 1 + 2 + 4;
+	// Header is checksum (4 bytes), type (1 byte), length (2 bytes), itemid(4 bytes).
+	static const uint8_t kHeaderSize = 4 + 1 + 2 + 4;
 
-enum FileStatus {
-	//the files that not are used
-	fUnUse = 1,
-	//the files used,already readed
-	fUse = 0,
-	//the file using
-	fUsing = 2
-};
+	enum FileStatus {
+		//the files that not are used
+		fUnUse = 1,
+		//the files used,already readed
+		fUse = 0,
+		//the file using
+		fUsing = 2
+	};
 
-static const int fNum = 100;
-static const uint32_t fMaxBlockNum = 10; //65535;
+	static const int fNum = 100;
+	static const uint32_t fMaxBlockNum = 10; //65535;
 
-//memory buffer size
-static const uint64_t mMaxBufferSize = 1024*1024*1; //10M
+	//memory buffer size
+	static const uint64_t mMaxBufferSize = 1024*1024*1; //10M
 
-typedef uint16_t FileId;
-typedef uint32_t ItemNumber;
-typedef uint64_t TimeId;
+	typedef uint16_t FileId;
+	typedef uint32_t ItemNumber;
+	typedef uint64_t TimeId;
 
-typedef struct filepos{
-    FileId id;
-    uint32_t blockid;
-	uint32_t offset;
-	ItemNumber curpos;
-	struct filepos& operator= (struct filepos &s) {
-		id = s.id;
-		blockid = s.blockid;
-		offset = s.offset;
-		curpos = s.curpos;
-		return *this;
-	}
-}filePos;
-typedef std::map<TimeId, filePos> FILELIST; 
+	typedef struct filepos{
+	    FileId id;
+	    uint32_t blockid;
+		uint32_t offset;
+		ItemNumber curpos;
+		struct filepos& operator= (struct filepos &s) {
+			id = s.id;
+			blockid = s.blockid;
+			offset = s.offset;
+			curpos = s.curpos;
+			return *this;
+		}
+	}filePos;
+	typedef std::map<TimeId, filePos> FILELIST; 
 
-class Opt
-{
-	static std::string path_;
-	static std::string name_;	
-public:	
-	static void Set(const std::string &path, const std::string &name) {
-		path_ = path;
-		name_ = name;
-	} 
-	static std::string GetBasePath() {
-		return  path_ + "/" + name_;
-	}	
-};
-
-
-class QueueFileName
-{
-public:
-	static void List(FileId id, std::string &filename) {
-		char buf[50] = {0};
-		sprintf(buf,"queue_%04d.lst", id);
-		filename = Opt::GetBasePath() +"/" + buf;
-	}  	
-	static void Head(std::string &filename) {
-		filename = Opt::GetBasePath()+"/headpage.hst";
-	}
-
-};
+	class Opt
+	{
+		static std::string path_;
+		static std::string name_;	
+	public:	
+		static void Set(const std::string &path, const std::string &name) {
+			path_ = path;
+			name_ = name;
+		} 
+		static std::string GetBasePath() {
+			return  path_ + "/" + name_;
+		}	
+	};
 
 
+	class QueueFileName
+	{
+	public:
+		static void List(FileId id, std::string &filename) {
+			char buf[50] = {0};
+			sprintf(buf,"queue_%04d.lst", id);
+			filename = Opt::GetBasePath() +"/" + buf;
+		}  	
+		static void Head(std::string &filename) {
+			filename = Opt::GetBasePath()+"/headpage.hst";
+		}
+
+	};
+}
 #endif

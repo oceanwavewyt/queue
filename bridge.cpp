@@ -4,22 +4,13 @@
 #include "reader.h"
 #include "writer.h"
 #include "mem_list.h"
-/*
-Bridge::Bridge() 
-{
 
-}
-
-Bridge::~Bridge()
-{
-
-}
-*/
-std::string Opt::path_ = "./data";
-std::string Opt::name_ = "test";
+namespace pile {
+	std::string Opt::path_ = "./data";
+	std::string Opt::name_ = "test";
 
 bool Bridge::Load(const string &path, const string &name) 
-{
+	{
 	if(opendir(path.c_str()) == NULL) {
 		mkdir(path.c_str(), 0755);	
 	}
@@ -55,24 +46,25 @@ bool Bridge::Load(const string &path, const string &name)
 	return true;
 }
 
-bool Bridge::Read(std::string &str) 
-{
-	QueueItem *item = MemList::Instance()->Pop();
-	if(item) {
-		item->Str(str);
-		MemList::Instance()->Delete();
-		return true;	
-	}	
-	return false;
-}
+	bool Bridge::Read(std::string &str) 
+	{
+		QueueItem *item = MemList::Instance()->Pop();
+		if(item) {
+			item->Str(str);
+			MemList::Instance()->Delete();
+			return true;	
+		}	
+		return false;
+	}
 
-bool Bridge::Write(char *str, uint64_t length)
-{
-	MemList::Instance()->WriteRecord(str, length);
-	return true;
-}
+	bool Bridge::Write(char *str, uint64_t length)
+	{
+		MemList::Instance()->WriteRecord(str, length);
+		return true;
+	}
 
-uint32_t Bridge::Size()
-{
-	return 1;
+	uint32_t Bridge::Size()
+	{
+		return 1;
+	}
 }

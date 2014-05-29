@@ -5,19 +5,20 @@
 #include <sys/types.h>
 #include <stdint.h>
 
-class Queue
-{
-public:
-	static bool Open(const std::string &path, const std::string &name, Queue **que);
-	
-	Queue(){
-	}
-	~Queue() {
-	
-	}
-	virtual bool Read(std::string &str) = 0;
-	virtual bool Write(char *str, uint64_t length)=0;
-	virtual uint32_t Size() = 0;
-};
-
+namespace pile {
+	class Queue
+	{
+	public:
+		static bool Open(const std::string &path, const std::string &name, Queue **que);
+		
+		Queue(){
+		}
+		~Queue() {
+		
+		}
+		virtual bool Read(std::string &str) = 0;
+		virtual bool Write(char *str, uint64_t length)=0;
+		virtual uint32_t Size() = 0;
+	};
+}
 #endif

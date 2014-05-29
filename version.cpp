@@ -1,5 +1,6 @@
 #include "version.h"
 
+namespace pile {
 Version *Version::instance_ = NULL;
 
 Version::Version():blockid_(1),interid_(1){
@@ -50,4 +51,5 @@ uint32_t Version::GetInterId()
 {
 	interid_++;
 	return interid_;
+}
 }
