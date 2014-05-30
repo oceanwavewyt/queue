@@ -3,10 +3,13 @@
 
 #include "include/queue.h"
 #include "format.h"
+#include "util/lock.h"
 
 namespace pile {
 
  class Bridge : public Queue {
+ 		CommLock rLock_[levelNum];
+		CommLock wLock_[levelNum];
 	public:
 		Bridge(){}
 		~Bridge(){}

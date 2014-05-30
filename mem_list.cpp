@@ -6,13 +6,19 @@
 
 namespace pile {
 
-	MemList *MemList::instance_ = NULL;
-
-	MemList *MemList::Instance()
+	void MemList::Initize()
 	{
-		if(instance_) return instance_;
-		instance_ = new MemList();
-		return instance_;
+		for(uint8_t i=0; i<=levelNum; i++) {
+			MemList *MemList::instance_[i] = NULL;
+		}
+
+	}
+	MemList *MemList::Instance(uint8_t level)
+	{
+		if(level<0 || level>levelNum) return NULL;
+		if(instance_[level]) return instance_[level];
+		instance_[level] = new MemList();
+		return instance_[level];
 	}
 
 	MemList::MemList():head_(NULL),tail_(NULL),currentMem_(0),currentReadFid_(0) {
@@ -41,7 +47,7 @@ namespace pile {
 		writer_ = new Writer(mfile);
 	}
 
-	void MemList::WriteRecord(const string &str, size_t length) {
+	void MemList::WriteRecord(const string &str, size_t length, uint8_t level) {
 		//cout << "blockid: "<< Version::Instance()->GetBlockId() << endl;	
 		if(Version::Instance()->GetBlockId() >= fMaxBlockNum) {
 			cout << "start release..................." << endl; 

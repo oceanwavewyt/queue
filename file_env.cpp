@@ -131,6 +131,43 @@ namespace pile {
   }
 
 
+  LevelFile::LevelFile(const std::string &fname, int fd):fd_(fd),
+    fname_(fname){
+
+  } 
+  bool LevelFile::LoadFile(){
+      struct stat s;
+      stat(fname_.c_str(), &s);
+    if(s.st_size  <= 0){
+        if (ftruncate(fd_, sizeof(levelItem)*levelNum) < 0) {
+          return false;
+        }
+      }
+      base_ = (levelItem *)mmap(NULL, sizeof(levelItem)*levelNum, PROT_READ | PROT_WRITE, MAP_SHARED,
+                       fd_, 0);
+      if (base_ == MAP_FAILED) {
+        return false;
+      }
+      return true;
+  }
+
+  LevelFile::~LevelFile(){
+      munmap(base_, sizeof(levelItem)*levelNum);
+      close(fd_);
+  }              
+
+  void LevelFile::AddItemNumber(uint8_t levelid) {
+       Lock lock(&levelLock_);
+      if(levelid<0 || levelid > levelNum) return;
+      base_[levelid].num++;       
+  }
+
+  void LevelFile::SubItemNumber(uint8_t levelid) {
+      Lock lock(&levelLock_);
+      if(levelid<0 || levelid > levelNum) return;
+      base_[levelid].num--;
+  }
+
   SequentialFile::SequentialFile(const std::string& fname, FILE* f)
   	: filename_(fname), file_(f) { 
   }

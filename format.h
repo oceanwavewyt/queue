@@ -58,6 +58,8 @@ namespace pile {
 
 	static const int fNum = 100;
 	static const uint32_t fMaxBlockNum = 10; //65535;
+	//the num of level for reading priority	
+	static const uint8_t levelNum = 9;
 
 	//memory buffer size
 	static const uint64_t mMaxBufferSize = 1024*1024*1; //10M
@@ -99,13 +101,18 @@ namespace pile {
 	class QueueFileName
 	{
 	public:
-		static void List(FileId id, std::string &filename) {
+		static void List(FileId id, std::string &filename, uint8_t levelid=0) {
 			char buf[50] = {0};
-			sprintf(buf,"queue_%04d.lst", id);
+			sprintf(buf,"queue_%04d_%d.lst", id, levelid);
 			filename = Opt::GetBasePath() +"/" + buf;
 		}  	
-		static void Head(std::string &filename) {
-			filename = Opt::GetBasePath()+"/headpage.hst";
+		static void Head(std::string &filename,uint8_t levelid=0) {
+			char buf[50] = {0};
+			sprintf(buf,"head_%d.lst", levelid);
+			filename = Opt::GetBasePath()+"/" + buf;
+		}
+		static void Level(std::string &filename) {
+			filename = Opt::GetBasePath()+"/level.hst";
 		}
 
 	};

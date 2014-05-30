@@ -64,10 +64,11 @@ namespace pile {
 
 	class MemList
 	{
-		static MemList *instance_;
+		static MemList *instance_[levelNum];
 		FixFile *filelist_;
 	public:
-		static MemList *Instance();
+		static MemList *Instance(uint8_t levelid=0);
+		static void Initize();
 		MemList();	
 		~MemList();
 		uint64_t Load(FILELIST &list, FileId curFileid);
@@ -77,7 +78,7 @@ namespace pile {
 		uint64_t Size();
 		
 		void SetWriter(string &filename); 
-		void WriteRecord(const string &str, size_t length);
+		void WriteRecord(const string &str, size_t length, uint8_t level=0);
 		void SetFilelist(FixFile *f);
 
 		void ReadTest(); 

@@ -30,6 +30,7 @@ bool Bridge::Load(const string &path, const string &name)
 		cout << "filelist load failed." << endl;
 		exit(1);
 	}
+	MemList::Initize();
 	//load to memory
 	FILELIST fileMapList;
 	fFile->GetUnUse(fileMapList);

@@ -2,6 +2,7 @@
 #define FILE_ENV_H_
 
 #include "format.h"
+#include "util/lock.h"
 
 using namespace std;
 
@@ -78,6 +79,27 @@ namespace pile {
     FileId curFileid;
   };
 
+  class LevelFile
+  {
+      typedef struct levelitem
+      {
+         uint8_t id;
+         uint32_t num; 
+      }levelItem;
+    public:
+      LevelFile(const std::string &fname, int fd);
+      ~LevelFile();
+      bool LoadFile();
+      void AddItemNumber(uint8_t levelid=0);
+      void SubItemNumber(uint8_t levelid=0);
+    private:
+      int fd_;
+      std::string fname_;
+      std::string basePath_;
+      levelItem *base_;
+      CommLock levelLock_;      
+  };
+
   class Files
   {
   	size_t page_size_;
@@ -129,6 +151,22 @@ namespace pile {
       return true;
 
     }
+
+    bool NewLevelFile(const std::string & fname, LevelFile** result) {
+      int f = O_RDWR;
+      if(access(fname.c_str(),0) == -1) {
+        f = f|O_CREAT;
+      }
+      const int fd = open(fname.c_str(), f, 0644);
+      if (fd < 0) {
+        *result = NULL;
+        return false;
+      } else {
+        *result = new LevelFile(fname, fd);
+      }
+      return true;
+
+    }    
 
   };
 }
