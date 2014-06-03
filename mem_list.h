@@ -67,7 +67,7 @@ namespace pile {
 		static MemList *instance_[levelNum];
 		FixFile *filelist_;
 	public:
-		static MemList *Instance(uint8_t levelid=0);
+		static MemList *Instance(const uint8_t levelid=0);
 		static void Initize();
 		MemList();	
 		~MemList();

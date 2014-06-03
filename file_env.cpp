@@ -158,13 +158,13 @@ namespace pile {
 
   void LevelFile::AddItemNumber(uint8_t levelid) {
        Lock lock(&levelLock_);
-      if(levelid<0 || levelid > levelNum) return;
+      if(levelid > levelNum) return;
       base_[levelid].num++;       
   }
 
   void LevelFile::SubItemNumber(uint8_t levelid) {
       Lock lock(&levelLock_);
-      if(levelid<0 || levelid > levelNum) return;
+      if(levelid > levelNum) return;
       base_[levelid].num--;
   }
 

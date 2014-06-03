@@ -5,19 +5,17 @@
 #include "version.h"
 
 namespace pile {
+	
+	MemList *MemList::instance_[] = {NULL};
 
-	void MemList::Initize()
+	MemList *MemList::Instance(const uint8_t level)
 	{
-		for(uint8_t i=0; i<=levelNum; i++) {
-			MemList *MemList::instance_[i] = NULL;
+		if(level>levelNum) return NULL;
+		if(instance_[0]) return instance_[level];
+		for(int i=0; i<=levelNum; i++){
+		//if(instance_[level]) return instance_[level];
+			instance_[i] = new MemList();
 		}
-
-	}
-	MemList *MemList::Instance(uint8_t level)
-	{
-		if(level<0 || level>levelNum) return NULL;
-		if(instance_[level]) return instance_[level];
-		instance_[level] = new MemList();
 		return instance_[level];
 	}
 

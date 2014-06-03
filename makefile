@@ -4,7 +4,8 @@ include build_config.mk
 CC:=g++
 CXX:=g++
 DEBUG=DEBUG
-OUTPUTNAME:=libqueue.$(PLATFORM_SHARED_EXT)
+#OUTPUTNAME:=libqueue.$(PLATFORM_SHARED_EXT)
+OUTPUTNAME:=bfqueue
 OUTPATH=output
 INCLUDES += -I/usr/include/ -I./include/
 
