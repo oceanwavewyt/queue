@@ -10,8 +10,8 @@ OUTPATH=output
 INCLUDES += -I/usr/include/ -I./include/
 
 
-
-LDFLAGS +=$(PLATFORM_SHARED_LDFLAGS)$(OUTPUTNAME)  -lpthread
+LDFLAGS +=-lpthread
+#LDFLAGS +=$(PLATFORM_SHARED_LDFLAGS)$(OUTPUTNAME)  -lpthread
  
 CPPFLAGS += -g -fPIC -pg -Wall
 OS := $(shell uname -s)
