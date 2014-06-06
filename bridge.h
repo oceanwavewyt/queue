@@ -15,9 +15,9 @@ namespace pile {
 		~Bridge(){}
 		bool Load(const string &path, const string &name);
 		
-		virtual bool Read(std::string &str);
-		virtual bool Write(char *str, uint64_t length);
-		virtual uint32_t Size();		
+		virtual bool Read(std::string &str, uint8_t level=0);
+		virtual bool Write(char *str, uint64_t length, uint8_t level=0);
+		virtual uint32_t Size(uint8_t level=0);		
  };
 
 }

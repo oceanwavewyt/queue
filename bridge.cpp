@@ -19,51 +19,35 @@ bool Bridge::Load(const string &path, const string &name)
 		mkdir(baseName.c_str(), 0755);	
 	}
 	Opt::Set(path, name);
-	Files f;
-	/*********************/
-	FixFile *fFile;
-	string filename;
-	QueueFileName::Head(filename);
-	//string readPath = Opt::GetBasePath() + filename;
-	f.NewFixFile(filename, &fFile);
-	if(fFile->LoadFile() == false) {
-		cout << "filelist load failed." << endl;
-		exit(1);
-	}
-	//load to memory
-	FILELIST fileMapList;
-	fFile->GetUnUse(fileMapList);
-
-	fFile->GetCurrentFile(filename);
+	string levelFilename;
+	QueueFileName::Level(levelFilename); 
 	
-	MemList::Instance()->SetFilelist(fFile);
-	MemList::Instance()->SetWriter(filename);
-	if(fileMapList.size() > 0) {
-		FileId ccid = fFile->GetCurrentFileId();
-		MemList::Instance()->Load(fileMapList,ccid);
+	
+	for(uint8_t i=0; i<=levelNum; i++) {
+		MemList::Instance(i)->LoadAll();
 	}
 	
 	return true;
 }
 
-	bool Bridge::Read(std::string &str) 
+	bool Bridge::Read(std::string &str, uint8_t level) 
 	{
 		QueueItem *item = MemList::Instance()->Pop();
 		if(item) {
 			item->Str(str);
-			MemList::Instance()->Delete();
+			MemList::Instance(level)->Delete();
 			return true;	
 		}	
 		return false;
 	}
 
-	bool Bridge::Write(char *str, uint64_t length)
+	bool Bridge::Write(char *str, uint64_t length, uint8_t level)
 	{
-		MemList::Instance()->WriteRecord(str, length);
+		MemList::Instance(level)->WriteRecord(str, length);
 		return true;
 	}
 
-	uint32_t Bridge::Size()
+	uint32_t Bridge::Size(uint8_t level)
 	{
 		return 1;
 	}

@@ -60,7 +60,7 @@ namespace pile {
     }fileList;
 
   public:
-    FixFile(const std::string &fname, int fd);
+    FixFile(const std::string &fname, int fd, uint8_t level);
     ~FixFile();
     int GetCurrentFile(std::string &filename);
     FileId GetCurrentFileId();
@@ -77,6 +77,7 @@ namespace pile {
     char *base_;
     int startid_;
     FileId curFileid;
+	uint8_t level_;
   };
 
   class LevelFile
@@ -136,7 +137,7 @@ namespace pile {
     		}
   	}
 
-    bool NewFixFile(const std::string & fname, FixFile** result) {
+    bool NewFixFile(const std::string & fname, uint8_t level, FixFile** result) {
       int f = O_RDWR;
       if(access(fname.c_str(),0) == -1) {
         f = f|O_CREAT;
@@ -146,7 +147,7 @@ namespace pile {
         *result = NULL;
         return false;
       } else {
-        *result = new FixFile(fname, fd);
+        *result = new FixFile(fname, fd, level);
       }
       return true;
 

@@ -69,13 +69,14 @@ namespace pile {
 	public:
 		static MemList *Instance(const uint8_t levelid=0);
 		static void Initize();
-		MemList();	
+		MemList(uint8_t levelid=0);	
 		~MemList();
 		uint64_t Load(FILELIST &list, FileId curFileid);
 		void Push(QueueItem *item);	
 		QueueItem *Pop();
 		void Delete();
 		uint64_t Size();
+		void LoadAll();
 		
 		void SetWriter(string &filename); 
 		void WriteRecord(const string &str, size_t length, uint8_t level=0);
@@ -96,6 +97,7 @@ namespace pile {
 		Reader *reader_;
 		uint64_t currentMem_;
 		FileId currentReadFid_;
+		uint8_t level_;
 	};
 }
 #endif

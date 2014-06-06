@@ -4,8 +4,8 @@
 #include <math.h>
 
 namespace pile {
-  FixFile::FixFile(const std::string &fname, int fd):fd_(fd),
-    fname_(fname),startid_(1),curFileid(0){
+  FixFile::FixFile(const std::string &fname, int fd, uint8_t level):fd_(fd),
+    fname_(fname),startid_(1),curFileid(0),level_(level){
 
   } 
   bool FixFile::LoadFile(){
@@ -34,7 +34,7 @@ namespace pile {
     if(!curFileid) {
   	  curFileid = GetCurrentFileId();
     }
-    QueueFileName::List(curFileid, filename);
+    QueueFileName::List(curFileid, filename, level_);
     //filename = Opt::GetBasePath() + "/" + filename;
     return 0;
   }
@@ -59,7 +59,7 @@ namespace pile {
   	file->id = firstUse+1;
   	//if file exists and delete file
   	string filename;
-  	QueueFileName::List(file->id, filename);
+  	QueueFileName::List(file->id, filename, level_);
   	//filename = Opt::GetBasePath() + "/" + filename;
   	if(access(filename.c_str(), F_OK)>=0) {
   		assert(remove(filename.c_str())==0);	

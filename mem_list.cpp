@@ -12,14 +12,15 @@ namespace pile {
 	{
 		if(level>levelNum) return NULL;
 		if(instance_[0]) return instance_[level];
-		for(int i=0; i<=levelNum; i++){
+		for(uint8_t i=0; i<=levelNum; i++){
 		//if(instance_[level]) return instance_[level];
-			instance_[i] = new MemList();
+			instance_[i] = new MemList(i);
 		}
 		return instance_[level];
 	}
 
-	MemList::MemList():head_(NULL),tail_(NULL),currentMem_(0),currentReadFid_(0) {
+	MemList::MemList(uint8_t levelid):head_(NULL),tail_(NULL),currentMem_(0),
+		currentReadFid_(0),level_(levelid) {
 		length_ = 0;
 		writer_ = NULL;
 		reader_ = NULL;
@@ -102,6 +103,34 @@ namespace pile {
 		delete curit;
 		length_--;
 	}
+
+	/**
+ 	* init load file data
+ 	*/	
+	void MemList::LoadAll() 
+	{
+		Files f;
+		string filename;
+		QueueFileName::Head(filename, level_);
+		//string readPath = Opt::GetBasePath() + filename;
+		f.NewFixFile(filename, level_, &filelist_);
+		if(filelist_->LoadFile() == false) {
+			cout << "filelist load failed." << endl;
+			exit(1);
+		}
+		//load to memory
+		FILELIST fileMapList;
+		filelist_->GetUnUse(fileMapList);
+		filelist_->GetCurrentFile(filename);
+		//set current file of writer	
+		SetWriter(filename);
+		if(fileMapList.size() > 0) {
+			FileId ccid = filelist_->GetCurrentFileId();
+			Load(fileMapList,ccid);
+		}
+
+	}
+
 
 	/**
 	 *data is read over from memory, continue load data from file
