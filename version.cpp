@@ -1,6 +1,6 @@
 #include "version.h"
 
-namespace pile {
+namespace levelque {
 Version *Version::instance_ = NULL;
 
 Version::Version():blockid_(1),interid_(1){

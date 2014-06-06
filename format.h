@@ -29,7 +29,7 @@
 
 using namespace std;
 
-namespace pile {
+namespace levelque {
 	enum RecordType {
 		// Zero is reserved for preallocated files
 		kZeroType = 0,

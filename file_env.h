@@ -6,7 +6,7 @@
 
 using namespace std;
 
-namespace pile {
+namespace levelque {
   class SequentialFile {
   	std::string filename_;
   	FILE* file_;

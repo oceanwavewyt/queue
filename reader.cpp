@@ -4,7 +4,7 @@
 #include "util/crc32c.h"
 #include "util/coding.h"
 
-namespace pile {
+namespace levelque {
 
   Reader::Reader(SequentialFile* file, bool checksum,
                  uint64_t initial_offset)

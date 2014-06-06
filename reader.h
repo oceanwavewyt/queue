@@ -10,7 +10,7 @@
 
 #include "format.h"
 
-namespace pile {
+namespace levelque {
 
   class Reader {
    public:

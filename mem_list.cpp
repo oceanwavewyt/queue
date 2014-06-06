@@ -4,7 +4,7 @@
 #include "writer.h"
 #include "version.h"
 
-namespace pile {
+namespace levelque {
 	
 	MemList *MemList::instance_[] = {NULL};
 

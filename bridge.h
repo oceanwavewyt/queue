@@ -5,7 +5,7 @@
 #include "format.h"
 #include "util/lock.h"
 
-namespace pile {
+namespace levelque {
 
  class Bridge : public Queue {
  		CommLock rLock_[levelNum];
@@ -22,7 +22,7 @@ namespace pile {
 
 }
 
-	bool pile::Queue::Open(const string &path, const string &name, Queue **que) {
+	bool levelque::Queue::Open(const string &path, const string &name, Queue **que) {
 		Bridge *bge = new Bridge();
 	 	if(!bge->Load(path, name)) {
 			delete bge;

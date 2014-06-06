@@ -5,7 +5,7 @@
 #include "writer.h"
 #include "mem_list.h"
 
-namespace pile {
+namespace levelque {
 	std::string Opt::path_ = "./data";
 	std::string Opt::name_ = "test";
 

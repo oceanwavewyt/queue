@@ -3,7 +3,7 @@
 #include "version.h"
 #include <math.h>
 
-namespace pile {
+namespace levelque {
   FixFile::FixFile(const std::string &fname, int fd, uint8_t level):fd_(fd),
     fname_(fname),startid_(1),curFileid(0),level_(level){
 

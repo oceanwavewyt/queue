@@ -3,7 +3,7 @@
 
 #include <pthread.h>
 
-namespace pile {
+namespace levelque {
     class CommLock
     {
     private:

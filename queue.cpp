@@ -29,7 +29,7 @@ using namespace std;
 			char testData2[100]={0};
 			sprintf(testData2, "%d_共产主义好，生活幸福美满",j);	
 			//sprintf(testData2, "%d_abcde,efghijk",j);
-			pile::MemList::Instance()->WriteRecord(testData2, strlen(testData2));
+			levelque::MemList::Instance()->WriteRecord(testData2, strlen(testData2));
 		}
 		/*
 		char testData3[15] = "33333333333333";	
@@ -47,10 +47,10 @@ using namespace std;
 		*/
 	}
 
-	void TestRead(pile::Files &f, const string &filename) {
-		pile::SequentialFile* file;
+	void TestRead(levelque::Files &f, const string &filename) {
+		levelque::SequentialFile* file;
 	  	f.NewSequentialFile(filename, &file);
-		pile::Reader reader(file,false,0);
+		levelque::Reader reader(file,false,0);
 		string record;
 		string scratch;
 		int i=0;
@@ -75,15 +75,15 @@ using namespace std;
 
 	int main(int argc, char *args[])
 	{
-		pile::Queue *db;
-		pile::Queue::Open("/tmp","abc", &db);
+		levelque::Queue *db;
+		levelque::Queue::Open("/tmp","abc", &db);
 		
 		char testData2[100]={0};                            
-		sprintf(testData2, "%d_共产主义好，生活幸福美满",555);
-		db->Write(testData2, strlen(testData2));
+		sprintf(testData2, "%d_共产主义好，生活幸福美满",66);
+		db->Write(testData2, strlen(testData2),1);
 		
 		string data;
-		if(db->Read(data)) {
+		if(db->Read(data, 1)) {
 			cout << "read: " << data << endl;
 		}
 		

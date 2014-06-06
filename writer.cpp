@@ -6,7 +6,7 @@
 #include "util/crc32c.h"
 #include "util/coding.h"
 
-namespace pile {
+namespace levelque {
 	Writer::Writer(MmapFile *dest): dest_(dest),block_offset_(0){
 		for (int i = 0; i <= kMaxRecordType; i++) {
 	   		 char t = static_cast<char>(i);

@@ -3,7 +3,7 @@
 #include "format.h"
 #include "file_env.h"
 
-namespace pile {
+namespace levelque {
 	
  class Writer;
  class Reader;

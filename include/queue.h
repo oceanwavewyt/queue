@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <stdint.h>
 
-namespace pile {
+namespace levelque {
 	class Queue
 	{
 	public:

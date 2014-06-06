@@ -2,7 +2,7 @@
 #define WRITER_H_
 
 #include "format.h"
-namespace pile {
+namespace levelque {
 	class MmapFile;
 
 	class Writer 
