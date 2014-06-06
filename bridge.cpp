@@ -32,7 +32,7 @@ bool Bridge::Load(const string &path, const string &name)
 
 	bool Bridge::Read(std::string &str, uint8_t level) 
 	{
-		QueueItem *item = MemList::Instance()->Pop();
+		QueueItem *item = MemList::Instance(level)->Pop();
 		if(item) {
 			item->Str(str);
 			MemList::Instance(level)->Delete();
