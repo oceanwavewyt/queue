@@ -187,7 +187,7 @@ namespace levelque {
 	{
 		if(reader_) return reader_;
 		string filename;
-		QueueFileName::List(fid, filename);
+		QueueFileName::List(fid, filename, level_);
 		//filename = Opt::GetBasePath() + filename;
 		Files f;
 		SequentialFile* file;
@@ -224,7 +224,7 @@ namespace levelque {
 	void MemList::SetCurrWriterPos(FileId curFileid)
 	{
 		string filename;
-		QueueFileName::List(curFileid, filename);
+		QueueFileName::List(curFileid, filename, level_);
 		//filename = Opt::GetBasePath() + filename;
 		Files f;
 		SequentialFile* file;

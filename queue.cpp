@@ -79,13 +79,18 @@ using namespace std;
 		levelque::Queue::Open("/tmp","abc", &db);
 		
 		char testData2[100]={0};                            
-		sprintf(testData2, "%d_共产主义好，生活幸福美满",66);
+		sprintf(testData2, "%ld_共产主义好，生活幸福美满_1",time(NULL));
 		db->Write(testData2, strlen(testData2),1);
 		
 		string data;
 		if(db->Read(data, 1)) {
 			cout << "read: " << data << endl;
 		}
+		sprintf(testData2, "%ld_共产主义好，生活幸福美满_2",time(NULL));
+		db->Write(testData2, strlen(testData2),2);
 		
+		if(db->Read(data, 2)) {
+			cout << "read: " << data << endl;
+		}
 		return 1;
 	}
