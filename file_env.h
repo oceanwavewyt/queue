@@ -7,6 +7,7 @@
 using namespace std;
 
 namespace levelque {
+  class Item;
   class SequentialFile {
   	std::string filename_;
   	FILE* file_;
@@ -62,8 +63,8 @@ namespace levelque {
   public:
     FixFile(const std::string &fname, int fd, uint8_t level);
     ~FixFile();
-    int GetCurrentFile(std::string &filename);
-    FileId GetCurrentFileId();
+    int GetCurrentFile(Item *item, std::string &filename);
+    FileId GetCurrentFileId(Item *item);
     bool LoadFile();
     //按照时间顺序读取未使用过的文件列表
     void GetUnUse(FILELIST &unuseFiles);

@@ -3,9 +3,11 @@
 #include "reader.h"
 #include "writer.h"
 #include "version.h"
+#include "item.h"
 
 namespace levelque {
-	
+
+	/*	
 	MemList *MemList::instance_[] = {NULL};
 
 	MemList *MemList::Instance(const uint8_t level)
@@ -13,13 +15,13 @@ namespace levelque {
 		if(level>levelNum) return NULL;
 		if(instance_[0]) return instance_[level];
 		for(uint8_t i=0; i<=levelNum; i++){
-		//if(instance_[level]) return instance_[level];
 			instance_[i] = new MemList(i);
 		}
 		return instance_[level];
 	}
+	*/
 
-	MemList::MemList(uint8_t levelid):head_(NULL),tail_(NULL),currentMem_(0),
+	MemList::MemList(Item *item, uint8_t levelid):item_(item),head_(NULL),tail_(NULL),currentMem_(0),
 		currentReadFid_(0),level_(levelid) {
 		length_ = 0;
 		writer_ = NULL;
@@ -53,7 +55,7 @@ namespace levelque {
 			filelist_->ReleaseCurFile();
 			Version::Instance()->Init(0,0);
 			string filename;
-			filelist_->GetCurrentFile(filename);
+			filelist_->GetCurrentFile(item_, filename);
 			SetWriter(filename);	
 		}
 		cout << "write: "<< str << endl;
@@ -112,7 +114,8 @@ namespace levelque {
 		Files f;
 		string filename;
 		QueueFileName::Head(filename, level_);
-		//string readPath = Opt::GetBasePath() + filename;
+		filename = item_->GetBasePath() + "/" + filename;
+		
 		f.NewFixFile(filename, level_, &filelist_);
 		if(filelist_->LoadFile() == false) {
 			cout << "filelist load failed." << endl;
@@ -121,11 +124,11 @@ namespace levelque {
 		//load to memory
 		FILELIST fileMapList;
 		filelist_->GetUnUse(fileMapList);
-		filelist_->GetCurrentFile(filename);
+		filelist_->GetCurrentFile(item_, filename);
 		//set current file of writer	
 		SetWriter(filename);
 		if(fileMapList.size() > 0) {
-			FileId ccid = filelist_->GetCurrentFileId();
+			FileId ccid = filelist_->GetCurrentFileId(item_);
 			Load(fileMapList,ccid);
 		}
 
@@ -140,7 +143,7 @@ namespace levelque {
 	void MemList::ContLoad()
 	{
 		FileId tmpCurrReadFid = currentReadFid_;
-		FileId tmpCurrWriteFid = filelist_->GetCurrentFileId();
+		FileId tmpCurrWriteFid = filelist_->GetCurrentFileId(item_);
 		int readOver = 0; 
 		if(reader_) {
 			readOver = LoadFile(currentReadFid_, 0, tmpCurrWriteFid);
@@ -151,7 +154,7 @@ namespace levelque {
 		//Continue load other file
 		FILELIST fileMapList;
 		filelist_->GetUnUse(fileMapList);
-		HoldLoad(fileMapList, filelist_->GetCurrentFileId());
+		HoldLoad(fileMapList, filelist_->GetCurrentFileId(item_));
 	}
 
 	uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
@@ -188,7 +191,8 @@ namespace levelque {
 		if(reader_) return reader_;
 		string filename;
 		QueueFileName::List(fid, filename, level_);
-		//filename = Opt::GetBasePath() + filename;
+		filename = item_->GetBasePath() + "/" + filename;	
+	
 		Files f;
 		SequentialFile* file;
 		if(!f.NewSequentialFile(filename, &file)) {
@@ -225,6 +229,8 @@ namespace levelque {
 	{
 		string filename;
 		QueueFileName::List(curFileid, filename, level_);
+		filename = item_->GetBasePath() + "/" + filename;
+
 		//filename = Opt::GetBasePath() + filename;
 		Files f;
 		SequentialFile* file;

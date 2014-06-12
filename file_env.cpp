@@ -1,6 +1,7 @@
 #include "format.h"
 #include "file_env.h"
 #include "version.h"
+#include "item.h"
 #include <math.h>
 
 namespace levelque {
@@ -30,16 +31,16 @@ namespace levelque {
       close(fd_);
   }                                              
 
-  int FixFile::GetCurrentFile(std::string &filename) {
+  int FixFile::GetCurrentFile(Item *item, std::string &filename) {
     if(!curFileid) {
-  	  curFileid = GetCurrentFileId();
+  	  curFileid = GetCurrentFileId(item);
     }
     QueueFileName::List(curFileid, filename, level_);
-    //filename = Opt::GetBasePath() + "/" + filename;
+    filename = item->GetBasePath() + "/" + filename;
     return 0;
   }
 
-  FileId FixFile::GetCurrentFileId() {
+  FileId FixFile::GetCurrentFileId(Item *item) {
   	if(curFileid) return curFileid;
   	int firstUse = -1;
   	for(int i=0; i<=fNum; i++){                                   
@@ -60,7 +61,8 @@ namespace levelque {
   	//if file exists and delete file
   	string filename;
   	QueueFileName::List(file->id, filename, level_);
-  	//filename = Opt::GetBasePath() + "/" + filename;
+  	filename = item->GetBasePath() + "/" + filename;
+
   	if(access(filename.c_str(), F_OK)>=0) {
   		assert(remove(filename.c_str())==0);	
   	}		

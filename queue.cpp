@@ -29,7 +29,7 @@ using namespace std;
 			char testData2[100]={0};
 			sprintf(testData2, "%d_共产主义好，生活幸福美满",j);	
 			//sprintf(testData2, "%d_abcde,efghijk",j);
-			levelque::MemList::Instance()->WriteRecord(testData2, strlen(testData2));
+			//levelque::MemList::Instance()->WriteRecord(testData2, strlen(testData2));
 		}
 		/*
 		char testData3[15] = "33333333333333";	
@@ -77,20 +77,33 @@ using namespace std;
 	{
 		levelque::Queue *db;
 		levelque::Queue::Open("/tmp","abc", &db);
-		
+	
+		db->CreateQueueName("/tmp", "abc_two");
+	
 		char testData2[100]={0};                            
 		sprintf(testData2, "%ld_共产主义好，生活幸福美满_1",time(NULL));
-		db->Write(testData2, strlen(testData2),1);
+		db->Write("abc",testData2, strlen(testData2),1);
 		
 		string data;
-		if(db->Read(data, 1)) {
+		if(db->Read("abc", data, 1)) {
 			cout << "read: " << data << endl;
 		}
 		sprintf(testData2, "%ld_共产主义好，生活幸福美满_2",time(NULL));
-		db->Write(testData2, strlen(testData2),2);
+		db->Write("abc", testData2, strlen(testData2),2);
 		
-		if(db->Read(data, 2)) {
+		if(db->Read("abc", data, 2)) {
 			cout << "read: " << data << endl;
 		}
+
+
+
+		sprintf(testData2, "%ld_test_dbtwo_2",time(NULL));
+		db->Write("abc_two", testData2, strlen(testData2),2);
+		
+		if(db->Read("abc_two", data, 2)) {
+			cout << "read: " << data << endl;
+		}
+
+
 		return 1;
 	}

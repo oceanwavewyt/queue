@@ -4,7 +4,8 @@
 #include "file_env.h"
 
 namespace levelque {
-	
+
+ class Item;	
  class Writer;
  class Reader;
  class QueueItem {
@@ -69,7 +70,7 @@ namespace levelque {
 	public:
 		static MemList *Instance(const uint8_t levelid=0);
 		static void Initize();
-		MemList(uint8_t levelid=0);	
+		MemList(Item *,uint8_t levelid=0);	
 		~MemList();
 		uint64_t Load(FILELIST &list, FileId curFileid);
 		void Push(QueueItem *item);	
@@ -90,6 +91,7 @@ namespace levelque {
 		Reader *GetCurrentReader(FileId fid, uint64_t pos=0);
 		void SetCurrWriterPos(FileId curFileid); 
 	private:
+		Item *item_;
 		QueueLink *head_;
 		QueueLink *tail_;
 		uint64_t length_;

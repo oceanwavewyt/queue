@@ -83,20 +83,6 @@ namespace levelque {
 	}filePos;
 	typedef std::map<TimeId, filePos> FILELIST; 
 
-	class Opt
-	{
-		static std::string path_;
-		static std::string name_;	
-	public:	
-		static void Set(const std::string &path, const std::string &name) {
-			path_ = path;
-			name_ = name;
-		} 
-		static std::string GetBasePath() {
-			return  path_ + "/" + name_;
-		}	
-	};
-
 
 	class QueueFileName
 	{
@@ -104,15 +90,15 @@ namespace levelque {
 		static void List(FileId id, std::string &filename, uint8_t levelid=0) {
 			char buf[50] = {0};
 			sprintf(buf,"queue_%04d_%d.lst", id, levelid);
-			filename = Opt::GetBasePath() +"/" + buf;
+			filename =  buf;
 		}  	
 		static void Head(std::string &filename,uint8_t levelid=0) {
 			char buf[50] = {0};
 			sprintf(buf,"head_%d.lst", levelid);
-			filename = Opt::GetBasePath()+"/" + buf;
+			filename = buf;
 		}
 		static void Level(std::string &filename) {
-			filename = Opt::GetBasePath()+"/level.hst";
+			filename = "level.hst";
 		}
 
 	};
