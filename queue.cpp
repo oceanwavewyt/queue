@@ -85,25 +85,27 @@ using namespace std;
 		db->Write("abc",testData2, strlen(testData2),1);
 		
 		string data;
-		if(db->Read("abc", data, 1)) {
-			cout << "read: " << data << endl;
-		}
+		//if(db->Read("abc", data, 1)) {
+		//	cout << "read: " << data << endl;
+		//}
 		sprintf(testData2, "%ld_共产主义好，生活幸福美满_2",time(NULL));
 		db->Write("abc", testData2, strlen(testData2),2);
+		cout << "abc number: "<< db->Size("abc") << endl;
 		
-		if(db->Read("abc", data, 2)) {
-			cout << "read: " << data << endl;
-		}
-
+		//if(db->Read("abc", data, 2)) {
+		//	cout << "read: " << data << endl;
+		//}
+		
 
 
 		sprintf(testData2, "%ld_test_dbtwo_2",time(NULL));
 		db->Write("abc_two", testData2, strlen(testData2),2);
+		cout << "abc_two number: "<< db->Size("abc_two") << endl;	
 		
 		if(db->Read("abc_two", data, 2)) {
 			cout << "read: " << data << endl;
 		}
-
+		
 
 		return 1;
 	}

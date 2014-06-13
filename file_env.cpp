@@ -169,6 +169,19 @@ namespace levelque {
       if(levelid > levelNum) return;
       base_[levelid].num--;
   }
+  
+  uint32_t LevelFile::GetNumber(uint8_t levelid) {
+      if(levelid > levelNum) return 0;
+      return base_[levelid].num;
+  }
+	
+  uint32_t LevelFile::GetNumber() {
+      uint32_t result = 0; 
+	  for(uint8_t i=0; i<=levelNum; i++) {
+		result += base_[i].num;
+	  }
+	  return result;
+  }
 
   SequentialFile::SequentialFile(const std::string& fname, FILE* f)
   	: filename_(fname), file_(f) { 

@@ -41,4 +41,12 @@ namespace levelque {
 		}
 		return ques_[queueName]->Size(level);
 	}
+
+	uint32_t Bridge::Size(const std::string &queueName)
+	{
+		if(ques_.find(queueName) == ques_.end()) {
+			return 0;
+		}
+		return ques_[queueName]->SizeAll();
+	}
 }

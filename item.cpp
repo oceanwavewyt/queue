@@ -1,5 +1,6 @@
 #include "item.h"
 #include "mem_list.h"
+#include "file_env.h"
 
 namespace levelque {
 
@@ -18,8 +19,13 @@ namespace levelque {
 		if(opendir(baseName.c_str()) == NULL) {
 			mkdir(baseName.c_str(), 0755);	
 		}
+		//load num file
 		string levelFilename;
 		QueueFileName::Level(levelFilename); 
+		levelFilename = GetBasePath() + "/" + levelFilename;			
+		Files f;	
+		assert(f.NewLevelFile(levelFilename, &levelfile_));
+		assert(levelfile_->LoadFile());		
 			
 		for(uint8_t i=0; i<=levelNum; i++) {
 			mem_[i] = new MemList(this, i);
@@ -35,6 +41,7 @@ namespace levelque {
 		if(item) {
 			item->Str(str);
 			mem_[level]->Delete();
+			levelfile_->SubItemNumber(level);
 			return true;	
 		}	
 		return false;	
@@ -44,12 +51,18 @@ namespace levelque {
 	{
 		if(level > levelNum) return false;
 		mem_[level]->WriteRecord(str, length);
+		levelfile_->AddItemNumber(level);
 		return true;
 	}
 
 	uint32_t Item::Size(uint8_t level)
 	{
 		if(level > levelNum) return 0;
-		return 1;
+		return levelfile_->GetNumber(level);
+	}
+
+	uint32_t Item::SizeAll()
+	{
+		return levelfile_->GetNumber();
 	}
 }

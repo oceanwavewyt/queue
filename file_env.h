@@ -94,6 +94,8 @@ namespace levelque {
       bool LoadFile();
       void AddItemNumber(uint8_t levelid=0);
       void SubItemNumber(uint8_t levelid=0);
+	  uint32_t GetNumber(uint8_t levelid);
+	  uint32_t GetNumber();
     private:
       int fd_;
       std::string fname_;
