@@ -96,6 +96,7 @@ namespace levelque {
       void SubItemNumber(uint8_t levelid=0);
 	  uint32_t GetNumber(uint8_t levelid);
 	  uint32_t GetNumber();
+	  uint8_t GetMaxLevel();
     private:
       int fd_;
       std::string fname_;

@@ -26,7 +26,7 @@ namespace levelque {
 		Files f;	
 		assert(f.NewLevelFile(levelFilename, &levelfile_));
 		assert(levelfile_->LoadFile());		
-			
+		
 		for(uint8_t i=0; i<=levelNum; i++) {
 			mem_[i] = new MemList(this, i);
 			mem_[i]->LoadAll();
@@ -37,6 +37,7 @@ namespace levelque {
 	bool Item::Read(std::string &str, uint8_t level)
 	{
 		if(level > levelNum) return false;	
+		Lock lock(&rLock_[level]);
 		QueueItem *item = mem_[level]->Pop();
 		if(item) {
 			item->Str(str);
@@ -46,9 +47,16 @@ namespace levelque {
 		}	
 		return false;	
 	}
+
+	bool Item::Read(std::string &str)
+	{
+		Lock lock(&rMaxLock_);
+		return Read(str, levelfile_->GetMaxLevel());
+	}
 	
 	bool Item::Write(char *str, uint64_t length, uint8_t level)
 	{
+		Lock lock(&wLock_[level]);
 		if(level > levelNum) return false;
 		mem_[level]->WriteRecord(str, length);
 		levelfile_->AddItemNumber(level);
@@ -64,5 +72,11 @@ namespace levelque {
 	uint32_t Item::SizeAll()
 	{
 		return levelfile_->GetNumber();
+	}
+
+	//get the current's max level  for reading
+	uint8_t Item::GetCurMaxLevel()
+	{
+		return levelfile_->GetMaxLevel();	
 	}
 }

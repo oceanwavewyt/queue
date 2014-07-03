@@ -79,24 +79,24 @@ using namespace std;
 		levelque::Queue::Open("/tmp","abc", &db);
 	
 		db->CreateQueueName("/tmp", "abc_two");
-	
+		
+		string data;
 		char testData2[100]={0};                            
+		/*
 		sprintf(testData2, "%ld_共产主义好，生活幸福美满_1",time(NULL));
 		db->Write("abc",testData2, strlen(testData2),1);
 		
-		string data;
-		//if(db->Read("abc", data, 1)) {
-		//	cout << "read: " << data << endl;
-		//}
-		sprintf(testData2, "%ld_共产主义好，生活幸福美满_2",time(NULL));
-		db->Write("abc", testData2, strlen(testData2),2);
-		cout << "abc number: "<< db->Size("abc") << endl;
+		for(int i=1;i<=10; i++) {
+			sprintf(testData2, "%ld_%d_共产主义好，生活幸福美满_2",time(NULL),i);
+			db->Write("abc", testData2, strlen(testData2),2);
+			cout << "abc number: "<< db->Size("abc") << endl;
+		}
+		*/
+		if(db->Read("abc", data)) {
+			cout << "max read: " << data << endl;
+		}
 		
-		//if(db->Read("abc", data, 2)) {
-		//	cout << "read: " << data << endl;
-		//}
-		
-
+		return 1;
 
 		sprintf(testData2, "%ld_test_dbtwo_2",time(NULL));
 		db->Write("abc_two", testData2, strlen(testData2),2);
@@ -105,7 +105,8 @@ using namespace std;
 		if(db->Read("abc_two", data, 2)) {
 			cout << "read: " << data << endl;
 		}
-		
+	
+				
 
 		return 1;
 	}

@@ -183,6 +183,14 @@ namespace levelque {
 	  return result;
   }
 
+  uint8_t LevelFile::GetMaxLevel() {
+	  for(uint8_t i=levelNum; i>0; i--) {
+		  if(base_[i].num == 0) continue;
+		  return i;
+	  }
+	  return 0;
+  }  
+
   SequentialFile::SequentialFile(const std::string& fname, FILE* f)
   	: filename_(fname), file_(f) { 
   }
