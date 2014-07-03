@@ -21,7 +21,7 @@ levelque
      sprintf(testData, "%ld_welcome to beijing_1",time(NULL));
      //向级别bbs队列中的1级别写入数据
      db->Write("bbs",testdata, strlen(testData),1);
-     //向级别bbs队列中的 <b>9级别</b>写入数据
+     //向级别bbs队列中的 9级别写入数据
      db->Write("bbs",testdata, strlen(testData),9);
 
 ### 读数据
