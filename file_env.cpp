@@ -43,9 +43,10 @@ namespace levelque {
   FileId FixFile::GetCurrentFileId(Item *item) {
   	if(curFileid) return curFileid;
   	int firstUse = -1;
-  	for(int i=0; i<=fNum; i++){                                   
-  		uint32_t size = i*sizeof(fileList);                       
-      	fileList *file = reinterpret_cast<fileList *>(base_+size);
+  	for(int i=0; i<=fNum; i++){
+		fileList *file = GetIndex(i);                                   
+  		//uint32_t size = i*sizeof(fileList);                       
+      	//fileList *file = reinterpret_cast<fileList *>(base_+size);
       	if(file->status == fUse && firstUse == -1) {
   			firstUse = i;
   		}                       
@@ -55,8 +56,10 @@ namespace levelque {
   	}                                                             	
   	//no find and set Using
   	assert(firstUse!=-1);
-  	uint32_t size = firstUse*sizeof(fileList);
-  	fileList *file = reinterpret_cast<fileList *>(base_+size);
+  
+	fileList *file = GetIndex(firstUse);	
+	//uint32_t size = firstUse*sizeof(fileList);
+  	//fileList *file = reinterpret_cast<fileList *>(base_+size);
   	file->id = firstUse+1;
   	//if file exists and delete file
   	string filename;
@@ -76,20 +79,32 @@ namespace levelque {
 
   void FixFile::SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id) {
   	if(fid <=0) return;
-  	uint32_t size = (fid-1)*sizeof(fileList);                
-  	fileList *file = reinterpret_cast<fileList *>(base_+size);	
-  	file->blockid = blockid;
+  	fileList *file = GetIndex(fid-1);
+	file->blockid = blockid;
   	file->offset = blockOffset;	
   	file->curpos = id;
   }
 
+  void FixFile::SetWriteBlock(uint32_t blockid) {
+	fileList *file = GetIndex(curFileid-1);
+	file->wrblockid = blockid;
+  }
+
+  void FixFile::SetWriteInterid(uint32_t interid) {
+	fileList *file = GetIndex(curFileid-1);
+	file->wrinterid = interid;
+  }
+  
+   void FixFile::SetWriteOffset(uint64_t wrOffset) {
+		fileList *file = GetIndex(curFileid-1);
+		file->wroffset = wrOffset;
+   } 
 
   void FixFile::ReleaseCurFile() {
   	if(curFileid == 0) return;
    	cout << "curFileid:" << curFileid <<"\tfNum:"<<fNum<<endl;
   	assert(curFileid<=fNum);
-  	uint32_t s = (curFileid-1)*sizeof(fileList);
-  	fileList *file = reinterpret_cast<fileList *>(base_+s);
+  	fileList *file = GetIndex(curFileid-1);
   	file->status = fUnUse;  				
   	curFileid = 0;
   }
@@ -97,8 +112,7 @@ namespace levelque {
   //set status from fUnUse to fUse
   bool FixFile::SetUse(FileId fid) {
   	if(fid <=0) return false;
-  	uint32_t s = (fid-1)*sizeof(fileList);
-  	fileList *file = reinterpret_cast<fileList *>(base_+s);
+	fileList *file = GetIndex(fid-1);
   	file->status = fUse;
   	return true;
   }
@@ -108,11 +122,10 @@ namespace levelque {
       fileList *curfile=0;
       //cout << "fNum: " << fNum<< endl;
       for(int i=0; i<=fNum; i++){
-          uint32_t size = i*sizeof(fileList);
-  		fileList *file = reinterpret_cast<fileList *>(base_+size);
+		  fileList *file = GetIndex(i);
           if(file->id) {
   			//cout << "file status: "<< file->status << " id: " << file->id << "  blockid: "<<file->blockid << " pos: "<<file->curpos << endl;
-  		}
+  		  }
   		    //need delete file
           if(file->status == fUse) continue;
           if(file->status == fUsing) {
@@ -131,6 +144,17 @@ namespace levelque {
           curFileid = curfile->id;
       }
   }
+
+  fileList *FixFile::GetCurrentFileItem() {
+		cout << "curFileid: " << curFileid << endl;
+		return GetIndex(curFileid-1);
+  }
+
+  fileList *FixFile::GetIndex(FileId fid) {
+	  uint32_t size = fid*sizeof(fileList);
+  	  fileList *f = reinterpret_cast<fileList *>(base_+size);
+ 	  return f;  
+ }
 
 
   LevelFile::LevelFile(const std::string &fname, int fd):fd_(fd),

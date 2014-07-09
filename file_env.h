@@ -48,18 +48,19 @@ namespace levelque {
     bool Close();
   };
 
-
-  class FixFile
-  {
-    typedef struct filelist{
+  typedef struct filelist{
       FileId id;
       TimeId seq;
-      uint32_t blockid;
-  	uint32_t offset;
-  	ItemNumber curpos;
+      uint32_t wrblockid;
+	  uint32_t wrinterid;
+	  uint64_t wroffset;
+	  uint32_t blockid;
+  	  uint32_t offset;
+  	  ItemNumber curpos;
       FileStatus status;
-    }fileList;
-
+  }fileList;
+  class FixFile
+  {
   public:
     FixFile(const std::string &fname, int fd, uint8_t level);
     ~FixFile();
@@ -71,6 +72,13 @@ namespace levelque {
     void SetItemNumber(FileId fid, uint32_t blockid, uint64_t blockOffset, ItemNumber id);
     void ReleaseCurFile();
     bool SetUse(FileId fid);
+
+	void SetWriteBlock(uint32_t blockid);
+	void SetWriteInterid(uint32_t wrInterid);
+	void SetWriteOffset(uint64_t wrOffset);
+	fileList *GetCurrentFileItem();
+  private:
+	fileList *GetIndex(FileId fid);
   private:
     int fd_;
     std::string fname_;

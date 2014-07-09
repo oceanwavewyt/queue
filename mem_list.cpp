@@ -26,17 +26,14 @@ namespace levelque {
 		length_ = 0;
 		writer_ = NULL;
 		reader_ = NULL;
+		ver_ = new Version();
 	}
 
 	MemList::~MemList(){
 		delete writer_;
+		delete ver_;
 	}
-
-	void MemList::SetFilelist(FixFile *f) {
-		filelist_ = f;
-	}
-
-
+	
 	void MemList::SetWriter(string &filename) {
 		if(writer_) delete writer_;
 		MmapFile *mfile;
@@ -46,14 +43,15 @@ namespace levelque {
 			exit(1);
 		}	
 		writer_ = new Writer(mfile);
+		writer_->SetVersion(ver_);
 	}
 
 	void MemList::WriteRecord(const string &str, size_t length, uint8_t level) {
-		//cout << "blockid: "<< Version::Instance()->GetBlockId() << endl;	
-		if(Version::Instance()->GetBlockId() >= fMaxBlockNum) {
+		cout << "blockid: "<< ver_->GetBlockId() << endl;	
+		if(ver_->GetBlockId() >= fMaxBlockNum) {
 			cout << "start release..................." << endl; 
 			filelist_->ReleaseCurFile();
-			Version::Instance()->Init(0,0);
+			ver_->Init(0,0);
 			string filename;
 			filelist_->GetCurrentFile(item_, filename);
 			SetWriter(filename);	
@@ -121,6 +119,7 @@ namespace levelque {
 			cout << "filelist load failed." << endl;
 			exit(1);
 		}
+		ver_->SetFilelist(filelist_);
 		//load to memory
 		FILELIST fileMapList;
 		filelist_->GetUnUse(fileMapList);
@@ -159,7 +158,7 @@ namespace levelque {
 
 	uint64_t MemList::Load(FILELIST &flist, FileId curFileid)
 	{
-		Version::Instance()->Init(0,0);
+		ver_->Init(0,0);
 		HoldLoad(flist, curFileid);
 		//cout << "=============start SetCurrWriterPos "<< endl;
 		SetCurrWriterPos(curFileid);
@@ -227,6 +226,14 @@ namespace levelque {
 
 	void MemList::SetCurrWriterPos(FileId curFileid)
 	{
+		fileList *fitem = filelist_->GetCurrentFileItem();
+		cout << "fitem->wrblockid: "<< fitem->wrblockid << endl;
+		cout << "fitem->wroffset: "<< fitem->wroffset << endl;
+		ver_->Init(fitem->wrblockid, fitem->wrinterid); 
+		uint64_t fOffset = fitem->wrblockid*kBlockSize + fitem->wroffset;
+		writer_->SetOffset(fOffset, fitem->wroffset);
+		return ;
+
 		string filename;
 		QueueFileName::List(curFileid, filename, level_);
 		filename = item_->GetBasePath() + "/" + filename;
@@ -251,6 +258,7 @@ namespace levelque {
 		delete file;
 		uint64_t fileOffset = reader.FileEndOffset();
 		uint64_t blockOffset = reader.BlockEndOffset();	
+		
 		//cout << "file offset: " << fileOffset  <<"\tblock offset: "<<blockOffset << endl;
 		writer_->SetOffset(fileOffset, blockOffset);
 	}

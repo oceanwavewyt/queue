@@ -82,20 +82,23 @@ using namespace std;
 		
 		string data;
 		char testData2[100]={0};                            
-		/*
+		
 		sprintf(testData2, "%ld_共产主义好，生活幸福美满_1",time(NULL));
 		db->Write("abc",testData2, strlen(testData2),1);
 		
-		for(int i=1;i<=10; i++) {
+		/*		
+		for(int i=1;i<=1000000; i++) {
 			sprintf(testData2, "%ld_%d_共产主义好，生活幸福美满_2",time(NULL),i);
 			db->Write("abc", testData2, strlen(testData2),2);
 			cout << "abc number: "<< db->Size("abc") << endl;
 		}
 		*/
-		if(db->Read("abc", data)) {
-			cout << "max read: " << data << endl;
+		for(int j=1;j<10; j++) {
+			if(db->Read("abc", data)) {
+				cout << "max read: " << data << endl;
+				cout << "abc number: "<< db->Size("abc") << endl;
+			}
 		}
-		
 		return 1;
 
 		sprintf(testData2, "%ld_test_dbtwo_2",time(NULL));

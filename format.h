@@ -57,7 +57,7 @@ namespace levelque {
 	};
 
 	static const int fNum = 100;
-	static const uint32_t fMaxBlockNum = 10; //65535;
+	static const uint32_t fMaxBlockNum = 1000; //65535;
 	//the num of level for reading priority	
 	static const uint8_t levelNum = 9;
 

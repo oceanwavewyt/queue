@@ -5,7 +5,8 @@
 
 namespace levelque {
 
- class Item;	
+ class Item;
+ class Version;	
  class Writer;
  class Reader;
  class QueueItem {
@@ -81,7 +82,6 @@ namespace levelque {
 		
 		void SetWriter(string &filename); 
 		void WriteRecord(const string &str, size_t length, uint8_t level=0);
-		void SetFilelist(FixFile *f);
 
 		void ReadTest(); 
 	private:
@@ -100,6 +100,7 @@ namespace levelque {
 		uint64_t currentMem_;
 		FileId currentReadFid_;
 		uint8_t level_;
+		Version *ver_;
 	};
 }
 #endif

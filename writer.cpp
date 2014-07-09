@@ -22,6 +22,10 @@ namespace levelque {
 		block_offset_ = blockOffset;
 	}
 
+	void Writer::SetVersion(Version *ver) {
+		ver_ = ver;
+	}	
+
 	bool Writer::AddRecord(const string &data, size_t length) {
 		const char* ptr = data.c_str();
 		size_t left = length;    
@@ -38,7 +42,7 @@ namespace levelque {
 					dest_->Append("\x00\x00\x00\x00\x00\x00", leftover);        
 				}                                                                    
 				block_offset_ = 0; 
-				Version::Instance()->SetBlockId();                                                  
+				ver_->SetBlockId();                                                  
 			}                                                                      
 
 			// Invariant: we never leave < kHeaderSize bytes in a block.           
@@ -78,10 +82,10 @@ namespace levelque {
 		buf[5] = static_cast<char>(n >> 8);                                         
 		buf[6] = static_cast<char>(t);
 
-		uint32_t bid = Version::Instance()->GetBlockId();                                              
+		uint32_t bid = ver_->GetBlockId();                                              
 		buf[7] = static_cast<char>(bid & 0xff);
 		buf[8] = static_cast<char>(bid >> 8);
-		uint32_t iid = Version::Instance()->GetInterId();
+		uint32_t iid = ver_->GetInterId();
 		buf[9] = static_cast<char>(iid & 0xff);
 		buf[10] = static_cast<char>(iid >> 8);
 
@@ -98,7 +102,8 @@ namespace levelque {
 		if (s) {
 			s = dest_->Append(ptr, n);                                         
 		}                                                                           
-		block_offset_ += kHeaderSize + n;                                          
+		block_offset_ += kHeaderSize + n;
+		ver_->SetBlockOffset(block_offset_);                                          
 		return s;                                                                   
 	}                                                                             
 }
