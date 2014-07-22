@@ -47,16 +47,13 @@ namespace levelque {
 	}
 
 	void MemList::WriteRecord(const string &str, size_t length, uint8_t level) {
-		cout << "blockid: "<< ver_->GetBlockId() << endl;	
 		if(ver_->GetBlockId() >= fMaxBlockNum) {
-			cout << "start release..................." << endl; 
 			filelist_->ReleaseCurFile();
 			ver_->Init(0,0);
 			string filename;
 			filelist_->GetCurrentFile(item_, filename);
 			SetWriter(filename);	
 		}
-		cout << "write: "<< str << endl;
 		writer_->AddRecord(str, length);
 	}
 
@@ -195,7 +192,6 @@ namespace levelque {
 		Files f;
 		SequentialFile* file;
 		if(!f.NewSequentialFile(filename, &file)) {
-			cout << "new read null "<< endl;
 		  	return NULL;		
 		}
 		reader_ = new Reader(file,false,pos);
@@ -227,8 +223,6 @@ namespace levelque {
 	void MemList::SetCurrWriterPos(FileId curFileid)
 	{
 		fileList *fitem = filelist_->GetCurrentFileItem();
-		cout << "fitem->wrblockid: "<< fitem->wrblockid << endl;
-		cout << "fitem->wroffset: "<< fitem->wroffset << endl;
 		ver_->Init(fitem->wrblockid, fitem->wrinterid); 
 		uint64_t fOffset = fitem->wrblockid*kBlockSize + fitem->wroffset;
 		writer_->SetOffset(fOffset, fitem->wroffset);

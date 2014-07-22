@@ -102,7 +102,6 @@ namespace levelque {
 
   void FixFile::ReleaseCurFile() {
   	if(curFileid == 0) return;
-   	cout << "curFileid:" << curFileid <<"\tfNum:"<<fNum<<endl;
   	assert(curFileid<=fNum);
   	fileList *file = GetIndex(curFileid-1);
   	file->status = fUnUse;  				
@@ -146,7 +145,6 @@ namespace levelque {
   }
 
   fileList *FixFile::GetCurrentFileItem() {
-		cout << "curFileid: " << curFileid << endl;
 		return GetIndex(curFileid-1);
   }
 

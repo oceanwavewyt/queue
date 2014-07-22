@@ -4,14 +4,14 @@ include build_config.mk
 CC:=g++
 CXX:=g++
 DEBUG=DEBUG
-#OUTPUTNAME:=libqueue.$(PLATFORM_SHARED_EXT)
-OUTPUTNAME:=bfqueue
+OUTPUTNAME:=liblevelque.$(PLATFORM_SHARED_EXT)
+#OUTPUTNAME:=bfqueue
 OUTPATH=output
 INCLUDES += -I/usr/include/ -I./include/
 
 
 LDFLAGS +=-lpthread
-#LDFLAGS +=$(PLATFORM_SHARED_LDFLAGS)$(OUTPUTNAME)  -lpthread
+LDFLAGS +=$(PLATFORM_SHARED_LDFLAGS)$(OUTPUTNAME)  -lpthread
  
 CPPFLAGS += -g -fPIC -pg -Wall
 OS := $(shell uname -s)

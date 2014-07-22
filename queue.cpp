@@ -73,7 +73,7 @@ using namespace std;
 		}
 	}
 
-	int main(int argc, char *args[])
+	int main_(int argc, char *args[])
 	{
 		levelque::Queue *db;
 		levelque::Queue::Open("/tmp","abc", &db);
