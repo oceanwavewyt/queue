@@ -54,7 +54,7 @@ namespace levelque {
 		return Read(str, levelfile_->GetMaxLevel());
 	}
 	
-	bool Item::Write(char *str, uint64_t length, uint8_t level)
+	bool Item::Write(const char *str, uint64_t length, uint8_t level)
 	{
 		Lock lock(&wLock_[level]);
 		if(level > levelNum) return false;

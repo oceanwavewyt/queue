@@ -16,7 +16,7 @@ namespace levelque {
 		virtual bool CreateQueueName(const string &path, const string &name);
 		virtual bool Read(const std::string &queueName, std::string &str, uint8_t level);
 		virtual bool Read(const std::string &queueName, std::string &str);
-		virtual bool Write(const std::string &queueName, char *str, uint64_t length, uint8_t level);
+		virtual bool Write(const std::string &queueName, const char *str, uint64_t length, uint8_t level);
 		virtual uint32_t Size(const std::string &queueName, uint8_t level);
 		virtual uint32_t Size(const std::string &queueName);		
  };

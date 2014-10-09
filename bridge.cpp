@@ -34,7 +34,7 @@ namespace levelque {
 		return ques_[queueName]->Read(str);
 	}
 
-	bool Bridge::Write(const std::string &queueName, char *str, uint64_t length, uint8_t level)
+	bool Bridge::Write(const std::string &queueName, const char *str, uint64_t length, uint8_t level)
 	{
 		if(ques_.find(queueName) == ques_.end()) {
 			return false;

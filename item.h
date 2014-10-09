@@ -31,7 +31,7 @@ namespace levelque {
 		
 		bool Read(std::string &str, uint8_t level);
 		bool Read(std::string &str);
-		bool Write(char *str, uint64_t length, uint8_t level=0);
+		bool Write(const char *str, uint64_t length, uint8_t level=0);
 		uint32_t Size(uint8_t level=0);	
 		uint32_t SizeAll();	
 	private:
